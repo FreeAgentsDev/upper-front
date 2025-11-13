@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { services } from '../data/services';
+---
+
+<Layout title="Servicios Upper Barber Cuts" description="Conoce todos los servicios de barbería, barba, cejas y combos signature de Upper Barber Cuts.">
+	<Header />
+	<main class="bg-brand-ink">
+		<section class="relative overflow-hidden">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)]"></div>
+			<div class="relative mx-auto max-w-6xl px-6 py-24">
+				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Servicios Upper</p>
+				<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Diseñamos experiencias hechas a tu medida</h1>
+				<p class="mt-6 max-w-2xl text-sm text-brand-light/70">
+					Desde el diagnóstico hasta la recomendación final, cada servicio Upper está pensado para resaltar tus facciones, estilo de
+					vida y personalidad. Selecciona el servicio que prefieras y coordina tu reserva por WhatsApp.
+				</p>
+				<a
+					href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20agendar%20un%20servicio."
+					target="_blank"
+					rel="noreferrer"
+					class="mt-8 inline-flex rounded-full border border-brand-amber bg-brand-amber px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-ink transition hover:bg-transparent hover:text-brand-amber"
+				>
+					Reservar ahora
+				</a>
+			</div>
+		</section>
+
+		<section class="bg-brand-night/60">
+			<div class="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[minmax(0,1fr)_320px]">
+				<div class="space-y-8">
+					{services.map((service) => (
+						<article class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8 backdrop-blur">
+							<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+								<h2 class="text-2xl font-semibold text-brand-light">{service.name}</h2>
+								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">{service.duration} • {service.price}</p>
+							</div>
+							<p class="mt-4 text-sm text-brand-light/70">{service.summary}</p>
+							<ul class="mt-6 space-y-3 text-sm text-brand-light/70">
+								{service.features.map((feature) => (
+									<li class="flex items-start gap-3">
+										<span class="mt-[6px] h-2 w-2 flex-none rounded-full bg-brand-amber"></span>
+										<span>{feature}</span>
+									</li>
+								))}
+							</ul>
+							<a
+								href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20${encodeURIComponent(service.name)}.`}
+								target="_blank"
+								rel="noreferrer"
+								class="mt-6 inline-flex rounded-full border border-brand-amber/60 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber transition hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
+							>
+								Reservar por WhatsApp
+							</a>
+						</article>
+					))}
+				</div>
+				<aside class="h-max rounded-3xl border border-brand-stone/60 bg-brand-ink/60 p-6 text-sm text-brand-light/70">
+					<h2 class="text-sm font-semibold uppercase tracking-[0.3em] text-brand-amber">Garantía Upper</h2>
+					<p class="mt-4">
+						Si no quedas satisfecho con tu servicio, no pagas. Ajustamos tu estilo hasta que te sientas 100% seguro.
+					</p>
+					<div class="mt-6 space-y-4">
+						<div>
+							<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Incluye</p>
+							<ul class="mt-2 space-y-2">
+								<li>• Playlist personalizada</li>
+								<li>• Recomendación de productos</li>
+								<li>• Seguimiento post-servicio</li>
+							</ul>
+						</div>
+					</div>
+					<div class="mt-6 space-y-3">
+						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Tips antes de tu cita</p>
+						<ul class="space-y-2">
+							<li>• Llega 10 minutos antes para briefing inicial.</li>
+							<li>• Trae referencias visuales si quieres un cambio radical.</li>
+							<li>• Pregunta por el plan de fidelidad Upper Members.</li>
+						</ul>
+					</div>
+				</aside>
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+

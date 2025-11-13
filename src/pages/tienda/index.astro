@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import StoreFront from '../../components/store/StoreFront.tsx';
+import { products } from '../../data/products';
+---
+
+<Layout title="Tienda Upper Barber Cuts" description="Productos de cuidado masculino, maquinaria y herramientas recomendadas por Upper Barber Cuts.">
+	<Header />
+	<main class="bg-brand-ink">
+		<section class="relative overflow-hidden">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)]"></div>
+			<div class="relative mx-auto max-w-6xl px-6 py-24">
+				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Tienda Upper</p>
+				<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Todo lo que necesitas para cuidar tu estilo</h1>
+				<p class="mt-6 max-w-2xl text-sm text-brand-light/70">
+					Productos curados por Dayron y el equipo Upper: cuidado de barba, styling, maquinaria profesional y herramientas para
+					llevar la experiencia del sillón a tu casa. Añade tus favoritos al carrito y envíanos tu pedido por WhatsApp.
+				</p>
+			</div>
+		</section>
+
+		<section class="bg-brand-night/60">
+			<div class="mx-auto max-w-6xl px-6 py-16">
+				<StoreFront client:load products={products} />
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+

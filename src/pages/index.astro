@@ -1,11 +1,241 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { services } from '../data/services';
+import { testimonials } from '../data/testimonials';
+import { products } from '../data/products';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featuredServices = services.slice(0, 3);
+const featuredProducts = products.slice(0, 3);
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Upper Barber Cuts | Barbería y Tienda en Manizales" description="Cortes de precisión, diseño de barba y tienda de cuidado masculino con la experiencia Upper.">
+	<Header />
+	<main>
+		<section class="relative overflow-hidden bg-brand-ink">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.18),_transparent_55%)]"></div>
+			<div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-6 py-24 lg:flex-row lg:items-center">
+				<div class="lg:w-1/2">
+					<p class="text-xs uppercase tracking-[0.4em] text-brand-amber/80">Manizales • Barbería &amp; Tienda</p>
+					<h1 class="mt-6 text-4xl font-black uppercase leading-tight text-brand-light sm:text-5xl">
+						Cortes de precisión, actitud Upper y productos profesionales para tu rutina diaria.
+					</h1>
+					<p class="mt-6 max-w-xl text-base text-brand-light/75">
+						En Upper Barber Cuts encuentras una experiencia completa: un equipo liderado por Dayron que diseña tu look a medida,
+						ambiente moderno con música a tu gusto y una tienda curada de productos premium para continuar el
+						cuidado en casa.
+					</p>
+					<div class="mt-8 flex flex-col gap-4 sm:flex-row">
+						<a
+							href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20agendar%20una%20cita."
+							target="_blank"
+							rel="noreferrer"
+							class="rounded-full border border-brand-amber bg-brand-amber px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.3em] text-brand-ink transition hover:bg-transparent hover:text-brand-amber"
+						>
+							Agendar mi corte
+						</a>
+						<a
+							href="/tienda"
+							class="rounded-full border border-brand-amber/60 px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber transition hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
+						>
+							Explorar tienda
+						</a>
+					</div>
+				</div>
+				<div class="relative lg:w-1/2">
+					<div class="rounded-[32px] border border-brand-amber/40 bg-brand-night/40 p-8 backdrop-blur">
+						<div class="grid gap-6 sm:grid-cols-2">
+							<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/80 p-6">
+								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Servicios</p>
+								<p class="mt-3 text-base font-semibold text-brand-light">Corte freestyle + barba + cejas</p>
+								<p class="mt-4 text-sm text-brand-light/70">Reservas con garantía de satisfacción y asesoría personalizada.</p>
+							</div>
+							<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/80 p-6">
+								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Tienda</p>
+								<p class="mt-3 text-base font-semibold text-brand-light">Productos profesionales Upper Products</p>
+								<p class="mt-4 text-sm text-brand-light/70">Cuida tu look en casa con la misma calidad del sillón Upper.</p>
+							</div>
+							<div class="sm:col-span-2 rounded-3xl border border-brand-amber/60 bg-brand-amber/10 p-6 text-brand-light">
+								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">La experiencia Upper</p>
+								<p class="mt-3 text-sm text-brand-light/80">
+									Playlist a tu medida, ambiente moderno y un equipo que te guía paso a paso.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-brand-night/60">
+			<div class="mx-auto max-w-6xl px-6 py-20">
+				<div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+					<div>
+						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Servicios Signature</p>
+						<h2 class="mt-4 text-3xl font-black uppercase text-brand-light">Estilo y precisión en cada visita</h2>
+					</div>
+					<a
+						href="/servicios"
+						class="rounded-full border border-brand-amber/60 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber transition hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
+					>
+						Ver todos los servicios
+					</a>
+				</div>
+				<div class="mt-10 grid gap-6 md:grid-cols-3">
+					{featuredServices.map((service) => (
+						<article class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-6 backdrop-blur">
+							<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">{service.duration}</p>
+							<h3 class="mt-3 text-xl font-semibold text-brand-light">{service.name}</h3>
+							<p class="mt-4 text-sm text-brand-light/70">{service.summary}</p>
+							<ul class="mt-5 space-y-2 text-sm text-brand-light/60">
+								{service.features.map((feature) => (
+									<li class="flex items-start gap-2">
+										<span class="mt-[6px] h-2 w-2 flex-none rounded-full bg-brand-amber"></span>
+										<span>{feature}</span>
+									</li>
+								))}
+							</ul>
+							<p class="mt-6 text-sm font-semibold uppercase tracking-[0.3em] text-brand-amber">{service.price}</p>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="border-y border-brand-stone/60 bg-brand-ink">
+			<div class="mx-auto max-w-6xl px-6 py-20">
+				<div class="flex flex-col gap-6 lg:flex-row lg:items-center">
+					<div class="lg:w-1/2">
+						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Upper Experience</p>
+						<h2 class="mt-4 text-3xl font-black uppercase text-brand-light">Más que un corte, una experiencia completa</h2>
+						<p class="mt-5 text-sm text-brand-light/70">
+							Nos inspiramos en barberías de clase mundial como Capitan Barbas para crear una experiencia inmersiva: asesoría
+							personalizada, música seleccionada y un equipo atento a los detalles. Verás cómo cada visita potencia tu estilo y confianza.
+						</p>
+						<div class="mt-6">
+							<div class="rounded-2xl border border-brand-stone/60 bg-brand-night/80 p-5">
+								<h3 class="text-sm font-semibold uppercase tracking-[0.3em] text-brand-amber">Música a tu medida</h3>
+								<p class="mt-3 text-sm text-brand-light/70">Cuéntanos tu playlist favorita y la activamos durante tu servicio.</p>
+							</div>
+						</div>
+					</div>
+					<div class="lg:w-1/2">
+						<div class="grid gap-4 sm:grid-cols-2">
+							<div class="h-48 rounded-3xl border border-brand-stone/60 bg-[url('/media/image.png')] bg-cover bg-center"></div>
+							<div class="h-48 rounded-3xl border border-brand-amber/60 bg-brand-amber/10 p-6 text-sm text-brand-light">
+								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Espacios Upper</p>
+								<p class="mt-3 text-brand-light/80">Zona de espera con diseño industrial y barber chairs de alta gama.</p>
+							</div>
+							<div class="h-48 rounded-3xl border border-brand-stone/60 bg-brand-ink/80 p-6 text-sm text-brand-light/80 sm:col-span-2">
+								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Próximamente</p>
+								<p class="mt-3">
+									Upper Barber Products ampliará su línea con herramientas para uso particular. Sé el primero en enterarte suscribiéndote
+									a nuestras novedades.
+								</p>
+								<a
+									href="https://www.instagram.com/upper_barber_cuts_manizales"
+									target="_blank"
+									rel="noreferrer"
+									class="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber hover:underline"
+								>
+									Seguir en Instagram
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-brand-night/80">
+			<div class="mx-auto max-w-6xl px-6 py-20">
+				<div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+					<div>
+						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Tienda Upper</p>
+						<h2 class="mt-4 text-3xl font-black uppercase text-brand-light">Productos que prolongan la experiencia en casa</h2>
+					</div>
+					<a
+						href="/tienda"
+						class="rounded-full border border-brand-amber/60 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber transition hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
+					>
+						Ir a la tienda completa
+					</a>
+				</div>
+				<div class="mt-10 grid gap-6 md:grid-cols-3">
+					{featuredProducts.map((product) => (
+						<article class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-6 backdrop-blur">
+							<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">{product.category}</p>
+							<h3 class="mt-3 text-xl font-semibold text-brand-light">{product.name}</h3>
+							<p class="mt-4 text-sm text-brand-light/70">{product.description}</p>
+							<p class="mt-6 text-sm font-semibold uppercase tracking-[0.3em] text-brand-amber">
+								{new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(product.price)}
+							</p>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="border-y border-brand-stone/60 bg-brand-ink">
+			<div class="mx-auto max-w-6xl px-6 py-20">
+				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Testimonios</p>
+				<h2 class="mt-4 text-3xl font-black uppercase text-brand-light">Lo que dicen nuestros clientes</h2>
+				<div class="mt-10 grid gap-6 md:grid-cols-3">
+					{testimonials.map((testimonial) => (
+						<article class="h-full rounded-3xl border border-brand-stone/60 bg-brand-night/80 p-6 text-sm text-brand-light/80 shadow-lg shadow-black/10">
+							<p>“{testimonial.quote}”</p>
+							<div class="mt-6 text-xs uppercase tracking-[0.3em] text-brand-amber">
+								<p>{testimonial.author}</p>
+								<p class="mt-2 text-brand-light/50">{testimonial.source}</p>
+							</div>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<section class="bg-brand-night/60">
+			<div class="mx-auto max-w-6xl px-6 py-20">
+				<div class="grid gap-10 lg:grid-cols-2">
+					<div>
+						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Reserva tu experiencia</p>
+						<h2 class="mt-4 text-3xl font-black uppercase text-brand-light">Agenda por WhatsApp o visita nuestra tienda</h2>
+						<p class="mt-5 text-sm text-brand-light/70">
+							Contáctanos para coordinar tu cita, resolver dudas o armar tu kit de productos. Te responderemos en horario laboral
+							con toda la info que necesitas.
+						</p>
+						<div class="mt-6 space-y-3 text-sm text-brand-light/75">
+							<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://wa.me/573000000000" target="_blank" rel="noreferrer">
+								<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">WA</span>
+								<span>+57 300 000 0000</span>
+							</a>
+							<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.instagram.com/upper_barber_cuts_manizales" target="_blank" rel="noreferrer">
+								<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">IG</span>
+								<span>@upper_barber_cuts_manizales</span>
+							</a>
+							<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.tiktok.com/@upper_barber_cuts" target="_blank" rel="noreferrer">
+								<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">TT</span>
+								<span>@upper_barber_cuts</span>
+							</a>
+							<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://maps.app.goo.gl" target="_blank" rel="noreferrer">
+								<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">GM</span>
+								<span>Cra. 00 #00-00 • Manizales • Parqueadero propio</span>
+							</a>
+						</div>
+					</div>
+					<div class="overflow-hidden rounded-3xl border border-brand-stone/60">
+						<iframe
+							title="Ubicación Upper Barber Cuts"
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.999999!2d-75.500000!3d5.070000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sUpper%20Barber%20Cuts!5e0!3m2!1ses-419!2sco!4v1700000000000"
+							class="h-[420px] w-full border-0"
+							loading="lazy"
+							referrerpolicy="no-referrer-when-downgrade"
+						></iframe>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+	<Footer />
 </Layout>

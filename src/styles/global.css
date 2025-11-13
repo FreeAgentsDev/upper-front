@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Lil Stuart Alt", "Poppins", "Helvetica Neue", Arial, sans-serif;
+
+  --color-brand-ink: #010101;
+  --color-brand-night: #050505;
+  --color-brand-amber: #f7941f;
+  --color-brand-light: #ffffff;
+  --color-brand-stone: #1a1a1a;
+  --color-brand-muted: #3a3a3a;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+}

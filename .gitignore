@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Google Drive credentials (NO SUBIR A GIT)
+credentials.json
+token.json
+
+# Media files grandes (opcional, descomenta si no quieres subir imágenes)
+# public/media/

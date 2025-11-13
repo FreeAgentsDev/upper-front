@@ -1,0 +1,101 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Contacto Upper Barber Cuts" description="Agenda tu cita, escribe a WhatsApp Business o visita la barbería en Manizales.">
+	<Header />
+	<main class="bg-brand-ink">
+		<section class="relative overflow-hidden">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)]"></div>
+			<div class="relative mx-auto max-w-6xl px-6 py-24">
+				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Contacto</p>
+				<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Estamos listos para asesorarte</h1>
+				<p class="mt-6 max-w-2xl text-sm text-brand-light/70">
+					Reserva por WhatsApp, escríbenos en redes o visítanos en Manizales. Nuestro equipo responde con prioridad durante el horario de
+					atención.
+				</p>
+			</div>
+		</section>
+
+		<section class="bg-brand-night/60">
+			<div class="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[minmax(0,1fr)_360px]">
+				<div class="space-y-6">
+					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8">
+						<h2 class="text-xl font-semibold text-brand-light">WhatsApp Business</h2>
+						<p class="mt-3 text-sm text-brand-light/70">
+							Atendemos reservas, consultas sobre la tienda y pedidos personalizados. Indícanos tu nombre, servicio o producto y horario preferido.
+						</p>
+						<a
+							class="mt-6 inline-flex rounded-full border border-brand-amber bg-brand-amber px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-ink transition hover:bg-transparent hover:text-brand-amber"
+							href="https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20más%20información."
+							target="_blank"
+							rel="noreferrer"
+						>
+							Escribir ahora
+						</a>
+					</div>
+					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8">
+						<h2 class="text-xl font-semibold text-brand-light">Redes sociales</h2>
+						<ul class="mt-4 space-y-3 text-sm text-brand-light/75">
+							<li>
+								<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.instagram.com/upper_barber_cuts_manizales" target="_blank" rel="noreferrer">
+									<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">IG</span>
+									<span>@upper_barber_cuts_manizales</span>
+								</a>
+							</li>
+							<li>
+								<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.instagram.com/upperbarbercuts_store" target="_blank" rel="noreferrer">
+									<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">IG</span>
+									<span>@upperbarbercuts_store</span>
+								</a>
+							</li>
+							<li>
+								<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.tiktok.com/@upper_barber_cuts" target="_blank" rel="noreferrer">
+									<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">TT</span>
+									<span>@upper_barber_cuts</span>
+								</a>
+							</li>
+							<li>
+								<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.facebook.com/upperbarbercuts" target="_blank" rel="noreferrer">
+									<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">FB</span>
+									<span>/upperbarbercuts</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8">
+						<h2 class="text-xl font-semibold text-brand-light">Horario de atención</h2>
+						<ul class="mt-4 space-y-2 text-sm text-brand-light/75">
+							<li>Lunes a Viernes: 10:00 a.m. - 7:00 p.m.</li>
+							<li>Sábado: 9:00 a.m. - 7:00 p.m.</li>
+							<li>Domingos y festivos: Cerrado</li>
+						</ul>
+					</div>
+				</div>
+				<aside class="h-max rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-6">
+					<h2 class="text-sm font-semibold uppercase tracking-[0.3em] text-brand-amber">Visítanos</h2>
+					<p class="mt-4 text-sm text-brand-light/75">
+						Cra. 00 #00-00, Manizales. Parqueadero propio y señalización Upper visible desde la calle principal.
+					</p>
+					<div class="mt-6 overflow-hidden rounded-2xl border border-brand-stone/60">
+						<iframe
+							title="Mapa Upper Barber Cuts"
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.999999!2d-75.500000!3d5.070000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sUpper%20Barber%20Cuts!5e0!3m2!1ses-419!2sco!4v1700000000000"
+							class="h-64 w-full border-0"
+							loading="lazy"
+							referrerpolicy="no-referrer-when-downgrade"
+						></iframe>
+					</div>
+					<p class="mt-6 text-[11px] text-brand-light/50">
+						*Actualiza la dirección exacta y enlace de Google Maps cuando la barbería comparta la ubicación oficial.
+					</p>
+				</aside>
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>
+
+

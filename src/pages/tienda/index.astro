@@ -10,14 +10,17 @@ import { products } from '../../data/products';
 	<Header />
 	<main class="bg-brand-ink">
 		<section class="relative overflow-hidden">
-			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)]"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)] animate-pulse"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(247,148,31,0.1),_transparent_50%)] animate-pulse" style="animation-delay: 1s; animation-duration: 3s;"></div>
 			<div class="relative mx-auto max-w-6xl px-6 py-24">
-				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Tienda Upper</p>
-				<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Todo lo que necesitas para cuidar tu estilo</h1>
-				<p class="mt-6 max-w-2xl text-sm text-brand-light/70">
-					Productos curados por Dayron y el equipo Upper: cuidado de barba, styling, maquinaria profesional y herramientas para
-					llevar la experiencia del sillón a tu casa. Añade tus favoritos al carrito y envíanos tu pedido por WhatsApp.
-				</p>
+				<div class="animate-fade-in-up">
+					<p class="text-xs uppercase tracking-[0.3em] text-brand-amber font-semibold">Tienda Upper</p>
+					<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Todo lo que necesitas para cuidar tu <span class="text-gradient">estilo</span></h1>
+					<p class="mt-6 max-w-2xl text-sm text-brand-light/70 leading-relaxed">
+						Productos curados por Dayron y el equipo Upper: cuidado de barba, styling, maquinaria profesional y herramientas para
+						llevar la experiencia del sillón a tu casa. Añade tus favoritos al carrito y envíanos tu pedido por WhatsApp.
+					</p>
+				</div>
 			</div>
 		</section>
 

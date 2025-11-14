@@ -8,83 +8,171 @@ import Footer from '../components/Footer.astro';
 	<Header />
 	<main class="bg-brand-ink">
 		<section class="relative overflow-hidden">
-			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.18),_transparent_55%)]"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.18),_transparent_55%)] animate-pulse"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(247,148,31,0.1),_transparent_50%)] animate-pulse" style="animation-delay: 1s; animation-duration: 3s;"></div>
 			<div class="relative mx-auto max-w-6xl px-6 py-24">
-				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Upper Experience</p>
-				<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">El ritual Upper Barber Cuts</h1>
-				<p class="mt-6 max-w-2xl text-sm text-brand-light/70">
-					Cada visita a Upper es un ritual diseñado para que te sientas escuchado, cómodo y seguro. Nuestro equipo liderado por
-					Dayron mezcla técnica, hospitalidad y cultura urbana para crear un espacio único en Manizales.
-				</p>
+				<div class="animate-fade-in-up">
+					<p class="text-xs uppercase tracking-[0.3em] text-brand-amber font-semibold">Upper Experience</p>
+					<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Galería de la Experiencia <span class="text-gradient">Upper</span></h1>
+					<p class="mt-6 max-w-2xl text-sm text-brand-light/70 leading-relaxed">
+						Conoce nuestro ambiente, servicios y productos a través de esta galería visual. Cada imagen cuenta parte de la historia Upper.
+					</p>
+				</div>
 			</div>
 		</section>
 
-		<section class="bg-brand-night/60">
-			<div class="mx-auto grid max-w-6xl gap-8 px-6 py-20 md:grid-cols-2">
-				<div class="space-y-6">
-					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/80 p-8">
-						<h2 class="text-xl font-semibold text-brand-light">1. Diagnóstico y briefing</h2>
-						<p class="mt-3 text-sm text-brand-light/70">
-							Te escuchamos. Entendemos tu rutina, preferencias, contexto laboral o académico y referencias para proponer el estilo ideal.
-						</p>
-						<ul class="mt-4 space-y-2 text-sm text-brand-light/60">
-							<li>• Revisión de texturas y crecimiento del cabello</li>
-							<li>• Tips previos según tipo de barba o piel</li>
-							<li>• Selección musical personalizada</li>
-						</ul>
+		<!-- Galería de Experiencia -->
+		<section class="bg-brand-night/80">
+			<div class="mx-auto max-w-6xl px-6 py-24">
+				<!-- Galería organizada de imágenes -->
+				<div class="grid gap-4 md:grid-cols-4">
+					<!-- Imagen grande principal - Barbería -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-3xl border-2 border-brand-stone/60 md:col-span-2 md:row-span-2 shadow-xl">
+						<img
+							src="/media/barberia/sin-ti-tulo-tu-historia-20250610-145110-0000.webp"
+							alt="Ambiente Upper Barber Cuts"
+							class="h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/40 to-transparent"></div>
+						<div class="absolute bottom-6 left-6 right-6">
+							<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">El Ambiente</p>
+							<p class="mt-2 text-lg font-semibold text-brand-light">
+								Espacios diseñados para que te sientas cómodo
+							</p>
+						</div>
 					</div>
-					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/80 p-8">
-						<h2 class="text-xl font-semibold text-brand-light">2. Ritual de servicio</h2>
-						<p class="mt-3 text-sm text-brand-light/70">
-							Aplicamos técnicas freestyle, fades, perfilado o cejas con precisión y herramientas higienizadas tras cada servicio.
-						</p>
-						<ul class="mt-4 space-y-2 text-sm text-brand-light/60">
-							<li>• Toalla caliente y preparación de la piel</li>
-							<li>• Productos Upper Products y aliados premium</li>
-						</ul>
+					
+					<!-- Imagen 1 - Barbería -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/barberia/upper-barber-cuts-manizales-20250704-122955-0000.webp"
+							alt="Upper Barber Cuts"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
 					</div>
-					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/80 p-8">
-						<h2 class="text-xl font-semibold text-brand-light">3. Cierre y recomendaciones</h2>
-						<p class="mt-3 text-sm text-brand-light/70">
-							Te compartimos la mejor forma de mantener tu look, recomendamos productos y registramos tu histórico para la próxima visita.
-						</p>
-						<ul class="mt-4 space-y-2 text-sm text-brand-light/60">
-							<li>• Fotos de referencia para tu próximo corte</li>
-							<li>• Recomendaciones personalizadas de tienda</li>
-							<li>• Invitación a Upper Members (beneficios y lanzamientos)</li>
-						</ul>
+					
+					<!-- Imagen 2 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0206.webp"
+							alt="Experiencia Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
 					</div>
-				</div>
-				<div class="space-y-6">
-					<div class="rounded-3xl border border-brand-amber/60 bg-brand-amber/10 p-8 text-sm text-brand-light">
-						<h2 class="text-xl font-semibold text-brand-amber">Valores que nos guían</h2>
-						<ul class="mt-4 space-y-3">
-							<li><span class="font-semibold text-brand-light">Profesionalismo:</span> técnicas actualizadas y formación constante.</li>
-							<li><span class="font-semibold text-brand-light">Confianza:</span> comunicación transparente y garantía de satisfacción.</li>
-							<li><span class="font-semibold text-brand-light">Creatividad:</span> inspiración en tendencias freestyle y cultura urbana.</li>
-						</ul>
+					
+					<!-- Imagen 3 - Barbería -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/barberia/historia-de-instagram-nuestra-ubicacio-n-barberi-a-retro-azul-y-rojo-20250704-130705-0000.webp"
+							alt="Ubicación Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
 					</div>
-					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8">
-						<h2 class="text-xl font-semibold text-brand-light">Lo que nos diferencia</h2>
-						<ul class="mt-4 space-y-3 text-sm text-brand-light/70">
-							<li>• Control higiénico y esterilización continua</li>
-							<li>• Parqueadero propio y ubicación estratégica</li>
-							<li>• Comunidad activa en Instagram y TikTok</li>
-							<li>• Colaboraciones con Upper Barber Products</li>
-						</ul>
+					
+					<!-- Imagen 4 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0205.webp"
+							alt="Productos Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
 					</div>
-					<div class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8">
-						<h2 class="text-xl font-semibold text-brand-light">Aliados y próximos lanzamientos</h2>
-						<p class="mt-3 text-sm text-brand-light/70">
-							Estamos ampliando nuestra tienda con maquinaria profesional, herramientas para uso en casa y kits de cuidado masculino
-							seleccionados por el equipo Upper.
-						</p>
-						<a
-							href="/tienda"
-							class="mt-5 inline-flex rounded-full border border-brand-amber/60 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber transition hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
-						>
-							Ver tienda
-						</a>
+					
+					<!-- Imagen 5 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0204.webp"
+							alt="Servicios Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 6 - Barbería -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/barberia/upper-barber-cuts-manizales-20250626-140322-0000.webp"
+							alt="Upper Barber Cuts"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 7 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0138.webp"
+							alt="Experiencia Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 8 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0017.webp"
+							alt="Upper Barber Cuts"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 9 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0025.webp"
+							alt="Experiencia Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 10 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0023.webp"
+							alt="Upper Barber Cuts"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 11 - Barbería -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/barberia/tu-historia-animada-nuevo-post-negocio-de-joyeri-a-dina-mico-marro-n-y-blanco-20250512-091125-0000.webp"
+							alt="Servicios Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
+					</div>
+					
+					<!-- Imagen 12 - Otros -->
+					<div class="group card-hover-effect relative overflow-hidden rounded-2xl border-2 border-brand-stone/60 shadow-lg">
+						<img
+							src="/media/otros/img-20250807-wa0142.webp"
+							alt="Experiencia Upper"
+							class="aspect-square h-full w-full object-cover image-hover-effect"
+							loading="lazy"
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
 					</div>
 				</div>
 			</div>

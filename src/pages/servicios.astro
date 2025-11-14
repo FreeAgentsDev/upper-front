@@ -2,89 +2,480 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { services } from '../data/services';
+import { principalServices, comboServices, sinCitaServices } from '../data/services';
 ---
 
 <Layout title="Servicios Upper Barber Cuts" description="Conoce todos los servicios de barbería, barba, cejas y combos signature de Upper Barber Cuts.">
 	<Header />
 	<main class="bg-brand-ink">
+		<!-- Hero Section Mejorado -->
 		<section class="relative overflow-hidden">
-			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)]"></div>
-			<div class="relative mx-auto max-w-6xl px-6 py-24">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(247,148,31,0.2),_transparent_55%)] animate-pulse"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(247,148,31,0.1),_transparent_50%)] animate-pulse" style="animation-delay: 1s; animation-duration: 3s;"></div>
+			<div class="relative mx-auto max-w-7xl px-6 py-32 lg:py-40">
+				<div class="mx-auto max-w-3xl text-center animate-fade-in-up">
+					<div class="inline-flex items-center gap-2 rounded-full border border-brand-amber/30 bg-brand-amber/5 px-4 py-2 backdrop-blur">
+						<span class="h-2 w-2 animate-pulse rounded-full bg-brand-amber"></span>
 				<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Servicios Upper</p>
-				<h1 class="mt-6 text-4xl font-black uppercase text-brand-light">Diseñamos experiencias hechas a tu medida</h1>
-				<p class="mt-6 max-w-2xl text-sm text-brand-light/70">
-					Desde el diagnóstico hasta la recomendación final, cada servicio Upper está pensado para resaltar tus facciones, estilo de
-					vida y personalidad. Selecciona el servicio que prefieras y coordina tu reserva por WhatsApp.
-				</p>
+					</div>
+					<h1 class="mt-8 text-5xl font-black uppercase leading-tight text-brand-light lg:text-6xl">
+						Diseñamos experiencias hechas a tu <span class="text-gradient">medida</span>
+					</h1>
+					<p class="mt-6 text-base leading-relaxed text-brand-light/80 lg:text-lg">
+						Desde el diagnóstico hasta la recomendación final, cada servicio Upper está pensado para resaltar tus facciones, estilo de vida y personalidad. Selecciona el servicio que prefieras y coordina tu reserva por WhatsApp.
+					</p>
+					<div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
 				<a
 					href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20agendar%20un%20servicio."
 					target="_blank"
 					rel="noreferrer"
-					class="mt-8 inline-flex rounded-full border border-brand-amber bg-brand-amber px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-ink transition hover:bg-transparent hover:text-brand-amber"
-				>
-					Reservar ahora
-				</a>
+							class="group btn-premium relative overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-8 py-4 text-xs font-bold uppercase tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_30px_rgba(247,148,31,0.8)]"
+						>
+							<span class="relative z-10">Reservar ahora</span>
+							<div class="absolute inset-0 bg-gradient-to-r from-brand-amber via-amber-400 to-brand-amber opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
+						</a>
+						<a
+							href="#servicios"
+							class="group border-glow rounded-full border border-brand-amber/60 bg-brand-ink/50 px-8 py-4 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber backdrop-blur transition-all duration-200 hover:border-brand-amber hover:bg-brand-amber/10 hover:scale-105"
+						>
+							<span class="relative z-10 flex items-center gap-2">
+								Explorar servicios
+								<svg class="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+								</svg>
+							</span>
+						</a>
+					</div>
+				</div>
 			</div>
 		</section>
 
-		<section class="bg-brand-night/60">
-			<div class="mx-auto grid max-w-6xl gap-8 px-6 py-16 md:grid-cols-[minmax(0,1fr)_320px]">
-				<div class="space-y-8">
-					{services.map((service) => (
-						<article class="rounded-3xl border border-brand-stone/60 bg-brand-ink/70 p-8 backdrop-blur">
-							<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-								<h2 class="text-2xl font-semibold text-brand-light">{service.name}</h2>
-								<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">{service.duration} • {service.price}</p>
-							</div>
-							<p class="mt-4 text-sm text-brand-light/70">{service.summary}</p>
-							<ul class="mt-6 space-y-3 text-sm text-brand-light/70">
-								{service.features.map((feature) => (
-									<li class="flex items-start gap-3">
-										<span class="mt-[6px] h-2 w-2 flex-none rounded-full bg-brand-amber"></span>
-										<span>{feature}</span>
-									</li>
-								))}
-							</ul>
-							<a
-								href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20${encodeURIComponent(service.name)}.`}
-								target="_blank"
-								rel="noreferrer"
-								class="mt-6 inline-flex rounded-full border border-brand-amber/60 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber transition hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
+		<!-- Sección del Local Mejorada -->
+		<section class="relative overflow-hidden bg-gradient-to-b from-brand-night/40 to-brand-night/60 py-10">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_left,_rgba(247,148,31,0.1),_transparent_60%)]"></div>
+			<div class="relative mx-auto max-w-5xl px-4 sm:px-6">
+				<div class="group relative overflow-hidden rounded-[24px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/80 to-brand-ink/60 p-1.5 shadow-xl backdrop-blur-xl transition-all duration-500 hover:border-brand-amber/40 hover:shadow-[0_0_40px_rgba(247,148,31,0.3)]">
+					<div class="grid gap-0 overflow-hidden rounded-[22px] md:grid-cols-2 lg:grid-cols-[1.2fr_1fr]">
+						<div class="relative aspect-[16/10] w-full overflow-hidden sm:aspect-[4/3] md:aspect-auto md:h-auto md:min-h-[300px] lg:min-h-[340px]">
+							<video
+								id="upper-local-video"
+								src="/media/servicios/lv_0_20250611104907.mp4"
+								autoplay
+								muted
+								loop
+								playsinline
+								preload="auto"
+								class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+								poster="/media/servicios/Captura de pantalla 2025-11-13 222244.png"
 							>
-								Reservar por WhatsApp
+								<img
+									src="/media/servicios/Captura de pantalla 2025-11-13 222244.png"
+									alt="Upper Barber Cuts - Nuestro local en Manizales"
+									class="absolute inset-0 h-full w-full object-cover"
+								/>
+							</video>
+							<div class="absolute inset-0 bg-gradient-to-r from-brand-ink/25 via-transparent to-transparent md:from-brand-ink/15 md:to-transparent"></div>
+							<div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-brand-ink/85 via-brand-ink/40 to-transparent md:hidden"></div>
+							<script>
+								const localVideo = document.getElementById('upper-local-video');
+								if (localVideo) {
+									localVideo.muted = true;
+									localVideo.loop = true;
+									localVideo.playsInline = true;
+									
+									localVideo.addEventListener('loadedmetadata', () => {
+										localVideo.play().catch(() => {
+											document.addEventListener('click', () => localVideo.play(), { once: true });
+										});
+									});
+									
+									localVideo.addEventListener('canplay', () => {
+										localVideo.play().catch(() => {});
+									});
+									
+									localVideo.play().catch(() => {});
+								}
+							</script>
+						</div>
+						<div class="flex flex-col justify-center bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-6 sm:p-7 md:p-8">
+							<div class="inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-3 py-1.5 backdrop-blur">
+								<span class="text-xs uppercase tracking-[0.3em] text-brand-amber">Visítanos</span>
+							</div>
+							<h2 class="mt-4 text-2xl font-bold text-brand-light sm:text-3xl lg:text-4xl">Conoce nuestro espacio Upper</h2>
+							<p class="mt-4 text-sm leading-relaxed text-brand-light/75 sm:text-base">
+								Visita nuestra barbería en Manizales y vive la experiencia completa Upper. Ambiente moderno, música a tu gusto y un equipo profesional listo para diseñar tu look perfecto.
+							</p>
+							<a
+								href="/contacto"
+								class="group relative mt-6 inline-flex w-fit items-center gap-2 overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-ink transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(247,148,31,0.5)]"
+							>
+								<span>Ver información de contacto</span>
+								<svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+								</svg>
 							</a>
-						</article>
-					))}
+						</div>
+					</div>
 				</div>
-				<aside class="h-max rounded-3xl border border-brand-stone/60 bg-brand-ink/60 p-6 text-sm text-brand-light/70">
-					<h2 class="text-sm font-semibold uppercase tracking-[0.3em] text-brand-amber">Garantía Upper</h2>
-					<p class="mt-4">
+			</div>
+		</section>
+
+		<!-- Sección de Servicios Detallados Mejorada -->
+		<section id="servicios" class="relative overflow-hidden bg-gradient-to-b from-brand-night/60 to-brand-night/80 py-16">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_right,_rgba(247,148,31,0.08),_transparent_60%)]"></div>
+			<div class="relative mx-auto max-w-7xl px-6">
+				<div class="mb-10 text-center">
+					<div class="inline-flex items-center gap-2 rounded-full border border-brand-amber/30 bg-brand-amber/5 px-4 py-2 backdrop-blur">
+						<span class="h-2 w-2 animate-pulse rounded-full bg-brand-amber"></span>
+						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber">Nuestros Servicios</p>
+					</div>
+					<h2 class="mt-6 text-4xl font-black uppercase text-brand-light lg:text-5xl">Experiencias diseñadas para ti</h2>
+					<p class="mt-4 text-base text-brand-light/70 lg:text-lg">
+						Cada servicio está pensado para resaltar tu personalidad y estilo único. Selecciona el que más te guste y reserva tu cita.
+					</p>
+				</div>
+			</div>
+			<div class="relative mx-auto max-w-7xl px-6">
+				<!-- Servicios Principales - Grid Horizontal -->
+				<div class="mb-12">
+					<div class="mb-6 flex items-center gap-3">
+						<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+						<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Servicios Principales</h3>
+						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+					</div>
+					<div class="grid gap-6 lg:grid-cols-2">
+						{principalServices.map((service) => {
+							const serviceImage = service.id === 'corte-cabello' 
+								? '/media/servicios/cortes-que-ensen-an-ma-s-que-estilo-20250704-120536-0000.webp'
+								: '/media/servicios/esto-es-lo-que-realmente-le-hace-a-tu-barba-20250415-160242-0005.webp';
+							return (
+								<article class="group card-hover-effect relative overflow-hidden rounded-[28px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/80 to-brand-ink/60 p-1.5 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-brand-amber hover:shadow-[0_0_50px_rgba(247,148,31,0.4)] hover:scale-[1.01]">
+									<div class="grid gap-0 overflow-hidden rounded-[26px] md:grid-cols-[240px_1fr]">
+										<div class="relative h-48 overflow-hidden md:h-auto md:min-h-[280px]">
+											<img
+												src={serviceImage}
+												alt={service.name}
+												loading="lazy"
+												class="h-full w-full object-cover image-hover-effect"
+											/>
+											<div class="absolute inset-0 bg-gradient-to-r from-brand-ink/70 via-brand-ink/30 to-transparent md:from-brand-ink/50 md:via-transparent"></div>
+											<div class="absolute top-4 left-4">
+												<div class="rounded-full border-2 border-brand-amber/60 bg-brand-amber/20 px-3 py-1.5 backdrop-blur">
+													<p class="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-amber">
+														{service.duration}
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="flex flex-col justify-between bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-6">
+											<div>
+												<div class="mb-3 flex items-start justify-between gap-3">
+													<h3 class="text-2xl font-black uppercase text-brand-light">{service.name}</h3>
+													<div class="flex-shrink-0">
+														<div class="rounded-full border-2 border-brand-amber bg-brand-amber/20 px-4 py-1.5 backdrop-blur shadow-lg shadow-brand-amber/30">
+															<p class="text-xs font-black uppercase tracking-[0.15em] text-brand-amber">
+																{service.price}
+															</p>
+														</div>
+													</div>
+												</div>
+												<p class="mb-4 text-sm leading-relaxed text-brand-light/80">
+													{service.summary}
+												</p>
+												<ul class="space-y-2.5 text-xs text-brand-light/90">
+													{service.features.map((feature) => (
+														<li class="flex items-start gap-2.5">
+															<div class="mt-1 flex-shrink-0">
+																<div class="flex h-5 w-5 items-center justify-center rounded-full bg-brand-amber/30 border border-brand-amber/60">
+																	<svg class="h-3 w-3 text-brand-amber" fill="currentColor" viewBox="0 0 20 20">
+																		<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+																	</svg>
+																</div>
+															</div>
+															<span class="leading-relaxed">{feature}</span>
+														</li>
+													))}
+												</ul>
+											</div>
+											<a
+												href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20${encodeURIComponent(service.name)}.`}
+												target="_blank"
+												rel="noreferrer"
+												class="group/btn btn-premium relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-5 py-3 text-[11px] font-bold uppercase tracking-[0.25em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)]"
+											>
+												<span class="relative z-10">Reservar</span>
+												<svg class="relative z-10 h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+												</svg>
+												<div class="absolute inset-0 bg-gradient-to-r from-brand-amber via-amber-400 to-brand-amber opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100"></div>
+											</a>
+										</div>
+									</div>
+								</article>
+							);
+						})}
+					</div>
+				</div>
+
+				<!-- Combos y Adiciones - Grid Compacto -->
+				<div class="mb-12">
+					<div class="mb-4 flex items-center justify-between">
+						<div class="flex items-center gap-3 flex-1">
+							<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+							<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Combos y Adiciones</h3>
+							<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+						</div>
+						<a
+							href="/tienda"
+							class="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-brand-amber/60 bg-brand-amber/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber backdrop-blur transition hover:bg-brand-amber/20"
+						>
+							<span>Crear Combo</span>
+							<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+							</svg>
+						</a>
+					</div>
+					<div class="mb-4 text-center sm:hidden">
+						<a
+							href="/tienda"
+							class="inline-flex items-center gap-2 text-xs font-semibold text-brand-amber hover:text-brand-amber/80 transition"
+						>
+							<span>¿Quieres crear tu propio combo?</span>
+							<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+							</svg>
+						</a>
+					</div>
+					<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						{comboServices.map((service) => (
+							<article class="group card-hover-effect relative overflow-hidden rounded-[20px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/80 to-brand-ink/60 p-1.5 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-brand-amber hover:shadow-[0_0_35px_rgba(247,148,31,0.35)] hover:scale-[1.02]">
+								<div class="rounded-[18px] bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-5">
+									<div class="mb-3 flex items-start justify-between gap-2">
+										<h3 class="text-base font-black uppercase leading-tight text-brand-light flex-1">{service.name}</h3>
+										<div class="flex-shrink-0 rounded-full border-2 border-brand-amber bg-brand-amber/20 px-2.5 py-1 backdrop-blur">
+											<p class="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-amber">
+												{service.price}
+											</p>
+										</div>
+									</div>
+									<p class="mb-3 text-xs leading-relaxed text-brand-light/70 line-clamp-2">{service.summary}</p>
+									<ul class="mb-4 space-y-1.5 text-[11px] text-brand-light/80">
+										{service.features.slice(0, 2).map((feature) => (
+											<li class="flex items-start gap-1.5">
+												<svg class="mt-0.5 h-2.5 w-2.5 flex-shrink-0 text-brand-amber" fill="currentColor" viewBox="0 0 20 20">
+													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+												</svg>
+												<span class="line-clamp-1">{feature}</span>
+											</li>
+										))}
+									</ul>
+										<a
+											href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20${encodeURIComponent(service.name)}.`}
+											target="_blank"
+											rel="noreferrer"
+											class="group/btn btn-premium relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_18px_rgba(247,148,31,0.8)]"
+										>
+										<span class="relative z-10">Reservar</span>
+										<svg class="relative z-10 h-2.5 w-2.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+										</svg>
+									</a>
+								</div>
+							</article>
+						))}
+					</div>
+				</div>
+
+				<!-- Combos Personalizados y Servicios Sin Cita - Layout Horizontal -->
+				<div class="grid gap-8 lg:grid-cols-[1fr_400px]">
+					<div class="space-y-8">
+						<!-- Combos Personalizados -->
+						<div id="combos-personalizados">
+							<div class="mb-4 flex items-center gap-3">
+								<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+								<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Tus Combos Personalizados</h3>
+								<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+							</div>
+							<div id="custom-combos-container" class="grid gap-4 sm:grid-cols-2">
+								<!-- Los combos personalizados se cargarán aquí con JavaScript -->
+							</div>
+							<p id="no-combos-message" class="text-center text-xs text-brand-light/50 hidden py-4">
+								No tienes combos personalizados aún. <a href="/tienda" class="text-brand-amber hover:underline">Crea uno en la tienda</a>
+							</p>
+						</div>
+
+						<!-- Servicios Sin Cita -->
+						<div>
+							<div class="mb-4 flex items-center gap-3">
+								<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+								<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Servicios Sin Cita</h3>
+								<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
+							</div>
+							<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+								{sinCitaServices.map((service) => (
+									<article class="group card-hover-effect relative overflow-hidden rounded-[16px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/80 to-brand-ink/60 p-1 shadow-lg backdrop-blur-xl transition-all duration-300 hover:border-brand-amber hover:shadow-[0_0_25px_rgba(247,148,31,0.3)] hover:scale-[1.02]">
+										<div class="rounded-[14px] bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-4">
+											<div class="mb-2.5 flex items-start justify-between gap-2">
+												<h3 class="text-sm font-bold uppercase leading-tight text-brand-light flex-1">{service.name}</h3>
+												<div class="flex-shrink-0 rounded-full border border-brand-amber/60 bg-brand-amber/10 px-2 py-0.5 backdrop-blur">
+													<p class="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-amber">
+														{service.price}
+													</p>
+												</div>
+											</div>
+											<p class="mb-3 text-[11px] leading-relaxed text-brand-light/70 line-clamp-2">{service.summary}</p>
+											<a
+												href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20el%20servicio%20${encodeURIComponent(service.name)}%20sin%20cita.`}
+												target="_blank"
+												rel="noreferrer"
+												class="group/btn btn-premium relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full border border-brand-amber/60 bg-brand-amber/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-brand-amber backdrop-blur transition-all duration-200 hover:bg-brand-amber hover:text-brand-ink hover:scale-105"
+											>
+												<span class="relative z-10">Reservar</span>
+											</a>
+										</div>
+									</article>
+								))}
+							</div>
+						</div>
+					</div>
+					<aside class="sticky top-6 h-max">
+					<div class="rounded-[24px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/90 to-brand-night/90 p-6 shadow-xl backdrop-blur-xl">
+						<div class="mb-6">
+							<div class="inline-flex items-center gap-2 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-4 py-2 backdrop-blur">
+								<span class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber">Garantía Upper</span>
+							</div>
+							<h3 class="mt-4 text-xl font-bold text-brand-light">100% Satisfacción o tu dinero de vuelta</h3>
+							<p class="mt-4 text-sm leading-relaxed text-brand-light/75">
 						Si no quedas satisfecho con tu servicio, no pagas. Ajustamos tu estilo hasta que te sientas 100% seguro.
 					</p>
-					<div class="mt-6 space-y-4">
+						</div>
+						<div class="space-y-6 border-t border-brand-stone/40 pt-6">
 						<div>
-							<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Incluye</p>
-							<ul class="mt-2 space-y-2">
-								<li>• Playlist personalizada</li>
-								<li>• Recomendación de productos</li>
-								<li>• Seguimiento post-servicio</li>
+								<p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber/90">Incluye en todos los servicios</p>
+								<ul class="mt-4 space-y-3 text-sm text-brand-light/75">
+									<li class="flex items-start gap-3">
+										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+										<span>Playlist personalizada</span>
+									</li>
+									<li class="flex items-start gap-3">
+										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+										<span>Recomendación de productos</span>
+									</li>
+									<li class="flex items-start gap-3">
+										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+										<span>Seguimiento post-servicio</span>
+									</li>
+								</ul>
+							</div>
+							<div class="space-y-3 border-t border-brand-stone/40 pt-6">
+								<p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber/90">Tips antes de tu cita</p>
+								<ul class="space-y-3 text-sm text-brand-light/75">
+									<li class="flex items-start gap-3">
+										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+										<span>Llega 10 minutos antes para briefing inicial.</span>
+									</li>
+									<li class="flex items-start gap-3">
+										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+										<span>Trae referencias visuales si quieres un cambio radical.</span>
+									</li>
+									<li class="flex items-start gap-3">
+										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+										<span>Pregunta por el plan de fidelidad Upper Members.</span>
+									</li>
 							</ul>
 						</div>
 					</div>
-					<div class="mt-6 space-y-3">
-						<p class="text-xs uppercase tracking-[0.3em] text-brand-amber/80">Tips antes de tu cita</p>
-						<ul class="space-y-2">
-							<li>• Llega 10 minutos antes para briefing inicial.</li>
-							<li>• Trae referencias visuales si quieres un cambio radical.</li>
-							<li>• Pregunta por el plan de fidelidad Upper Members.</li>
-						</ul>
 					</div>
 				</aside>
 			</div>
 		</section>
 	</main>
 	<Footer />
+	<script is:inline>
+		// Cargar combos personalizados desde localStorage
+		document.addEventListener('DOMContentLoaded', () => {
+			const container = document.getElementById('custom-combos-container');
+			const noCombosMessage = document.getElementById('no-combos-message');
+			if (!container || !noCombosMessage) return;
+
+			const stored = localStorage.getItem('upper-custom-combos');
+			if (!stored) {
+				noCombosMessage.classList.remove('hidden');
+				return;
+			}
+
+			try {
+				const combos = JSON.parse(stored);
+				if (combos.length === 0) {
+					noCombosMessage.classList.remove('hidden');
+					return;
+				}
+
+				noCombosMessage.classList.add('hidden');
+				container.innerHTML = combos.map((combo) => {
+					const servicesList = combo.services.slice(0, 3).map(s => `<li class="flex items-start gap-1.5"><svg class="mt-0.5 h-2.5 w-2.5 flex-shrink-0 text-brand-amber" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg><span class="text-[11px] line-clamp-1">${s}</span></li>`).join('');
+					const price = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(combo.price);
+					return `
+						<article class="group relative overflow-hidden rounded-[20px] border-2 border-brand-amber/40 bg-gradient-to-br from-brand-ink/80 to-brand-ink/60 p-1.5 shadow-xl backdrop-blur-xl transition-all duration-500 hover:border-brand-amber hover:shadow-[0_0_35px_rgba(247,148,31,0.4)] hover:scale-[1.02]">
+							<div class="rounded-[18px] bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-5">
+								<div class="mb-3 flex items-start justify-between gap-2">
+									<div class="flex-1 min-w-0">
+										<div class="mb-1.5 inline-flex rounded-full border border-brand-amber/60 bg-brand-amber/10 px-2 py-0.5 backdrop-blur">
+											<p class="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-amber">Personalizado</p>
+										</div>
+										<h3 class="mt-1.5 text-base font-black uppercase leading-tight text-brand-light line-clamp-1">${combo.name}</h3>
+									</div>
+									<button
+										type="button"
+										onclick="deleteCombo('${combo.id}')"
+										class="flex-shrink-0 text-brand-light/30 hover:text-brand-amber transition p-1"
+										aria-label="Eliminar combo"
+									>
+										<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+										</svg>
+									</button>
+								</div>
+								${combo.description ? `<p class="mb-3 text-xs leading-relaxed text-brand-light/70 line-clamp-2">${combo.description}</p>` : ''}
+								<ul class="mb-3 space-y-1 text-[11px] text-brand-light/80">
+									${servicesList}
+									${combo.services.length > 3 ? `<li class="text-[10px] text-brand-light/50">+${combo.services.length - 3} más</li>` : ''}
+								</ul>
+								<div class="mb-3 flex items-center justify-between rounded-full border-2 border-brand-amber bg-brand-amber/20 px-3 py-1.5 backdrop-blur">
+									<p class="text-xs font-black uppercase tracking-[0.15em] text-brand-amber">${price}</p>
+								</div>
+								<a
+									href="https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20mi%20combo%20personalizado:%20${encodeURIComponent(combo.name)}"
+									target="_blank"
+									rel="noreferrer"
+									class="group/btn relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_18px_rgba(247,148,31,0.6)]"
+								>
+									<span class="relative z-10">Reservar</span>
+									<svg class="relative z-10 h-2.5 w-2.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+									</svg>
+								</a>
+							</div>
+						</article>
+					`;
+				}).join('');
+			} catch (e) {
+				noCombosMessage.classList.remove('hidden');
+			}
+		});
+
+		function deleteCombo(comboId) {
+			if (!confirm('¿Estás seguro de que quieres eliminar este combo?')) return;
+			const stored = localStorage.getItem('upper-custom-combos');
+			if (!stored) return;
+			try {
+				const combos = JSON.parse(stored);
+				const filtered = combos.filter(c => c.id !== comboId);
+				localStorage.setItem('upper-custom-combos', JSON.stringify(filtered));
+				location.reload();
+			} catch (e) {
+				console.error('Error al eliminar combo:', e);
+			}
+		}
+	</script>
 </Layout>
-
-

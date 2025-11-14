@@ -1,28 +1,45 @@
-<header class="sticky top-0 z-50 border-b border-brand-stone/60 bg-brand-ink/95 backdrop-blur">
+<header class="sticky top-0 z-50 border-b border-brand-stone/60 bg-brand-ink/95 backdrop-blur-xl shadow-lg shadow-black/20">
 	<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-		<a href="/" class="flex items-center gap-3">
-			<div class="flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber/60 bg-brand-ink">
-				<span class="text-lg font-black tracking-wide text-brand-amber">UP</span>
-			</div>
-			<div class="leading-tight">
-				<p class="font-black uppercase tracking-[0.3em] text-brand-light">Upper</p>
-				<p class="text-xs uppercase tracking-[0.32em] text-brand-amber/80">Barber Cuts</p>
-			</div>
-		</a>
-		<nav class="ml-auto flex items-center gap-4 overflow-x-auto text-xs uppercase tracking-[0.3em] text-brand-light">
-			<a class="transition hover:text-brand-amber" href="/">Inicio</a>
-			<a class="transition hover:text-brand-amber" href="/servicios">Servicios</a>
-			<a class="transition hover:text-brand-amber" href="/tienda">Tienda</a>
-			<a class="transition hover:text-brand-amber" href="/experiencia">Experiencia</a>
-			<a class="transition hover:text-brand-amber" href="/contacto">Contacto</a>
+	<a href="/" class="group flex items-center gap-3 transition-transform duration-300 hover:scale-105">
+		<img
+			src="/media/image.png"
+			alt="Upper Barber Cuts Logo"
+			class="h-10 w-auto transition-all duration-500 group-hover:drop-shadow-[0_0_15px_rgba(247,148,31,0.6)]"
+		/>
+		<div class="leading-tight">
+			<p class="font-black uppercase tracking-[0.3em] text-brand-light transition-colors duration-300 group-hover:text-brand-amber">Upper</p>
+			<p class="text-xs uppercase tracking-[0.32em] text-brand-amber/80 transition-colors duration-300 group-hover:text-brand-amber">Barber Cuts</p>
+		</div>
+	</a>
+		<nav class="ml-auto flex items-center gap-1 overflow-x-auto text-xs uppercase tracking-[0.3em] text-brand-light">
+			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/">
+				<span class="relative z-10">Inicio</span>
+				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+			</a>
+			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/servicios">
+				<span class="relative z-10">Servicios</span>
+				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+			</a>
+			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/tienda">
+				<span class="relative z-10">Tienda</span>
+				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+			</a>
+			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/experiencia">
+				<span class="relative z-10">Experiencia</span>
+				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+			</a>
+			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/contacto">
+				<span class="relative z-10">Contacto</span>
+				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+			</a>
 		</nav>
 		<a
 			href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quisiera%20agendar%20una%20cita."
 			target="_blank"
 			rel="noreferrer"
-			class="ml-4 hidden rounded-full border border-brand-amber bg-brand-amber px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-ink transition hover:bg-transparent hover:text-brand-amber lg:inline-block"
+			class="group/btn btn-premium ml-4 hidden rounded-full border-2 border-brand-amber bg-brand-amber px-5 py-2 text-xs font-bold uppercase tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)] lg:inline-block"
 		>
-			Reserva
+			<span>Reserva</span>
 		</a>
 	</div>
 </header>

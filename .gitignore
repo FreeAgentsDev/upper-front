@@ -27,5 +27,8 @@ pnpm-debug.log*
 credentials.json
 token.json
 
-# Media files grandes (opcional, descomenta si no quieres subir imágenes)
-# public/media/
+# Media files - Solo excluir archivos temporales y reportes
+# Las imágenes optimizadas SÍ se suben (están en public/media/)
+media-optimization-report.json
+public/media/test*.webp
+public/media/test*.jpg

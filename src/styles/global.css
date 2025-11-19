@@ -190,4 +190,161 @@
   .border-glow:hover::before {
     @apply opacity-50;
   }
+
+  /* Mejoras adicionales de estilos */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(247, 148, 31, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(247, 148, 31, 0.5);
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+
+  /* Mejoras en transiciones */
+  * {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  /* Mejoras en inputs y formularios */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply outline-none ring-2 ring-brand-amber/30 ring-offset-2 ring-offset-brand-ink;
+  }
+
+  /* Mejoras en cards */
+  .card-enhanced {
+    @apply relative overflow-hidden rounded-3xl border-2 border-brand-stone/40 bg-gradient-to-br from-brand-ink/90 to-brand-night/90 backdrop-blur-xl shadow-xl;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-enhanced::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-brand-amber/5 via-transparent to-transparent opacity-0;
+    transition: opacity 0.4s ease;
+  }
+
+  .card-enhanced:hover::before {
+    @apply opacity-100;
+  }
+
+  .card-enhanced:hover {
+    @apply border-brand-amber/60 shadow-2xl shadow-brand-amber/20;
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  /* Mejoras en botones */
+  .btn-enhanced {
+    @apply relative overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-6 py-3 text-xs font-bold uppercase tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/40;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-enhanced::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-enhanced:hover::after {
+    transform: translateX(100%);
+  }
+
+  .btn-enhanced:hover {
+    @apply scale-105 shadow-xl shadow-brand-amber/60;
+  }
+
+  .btn-enhanced:active {
+    @apply scale-95;
+  }
+
+  /* Mejoras en gradientes de texto */
+  .text-gradient-enhanced {
+    @apply bg-gradient-to-r from-brand-amber via-amber-300 via-yellow-300 to-brand-amber bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+
+  /* Mejoras en imágenes */
+  .image-enhanced {
+    @apply transition-all duration-500 ease-out;
+  }
+
+  .image-enhanced:hover {
+    @apply scale-105 brightness-110;
+    filter: contrast(1.1) saturate(1.1);
+  }
+
+  /* Mejoras en secciones */
+  .section-enhanced {
+    @apply relative overflow-hidden;
+  }
+
+  .section-enhanced::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-brand-amber/5 via-transparent to-transparent pointer-events-none;
+  }
+
+  /* Mejoras en espaciado y tipografía */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-black tracking-tight;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  /* Mejoras en scroll suave */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  /* Mejoras en focus visible */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-amber ring-offset-2 ring-offset-brand-ink;
+  }
 }

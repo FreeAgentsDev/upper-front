@@ -2,8 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import StoreFront from '../../components/store/StoreFront.tsx';
-import { products } from '../../data/products';
+import StoreFrontWrapper from '../../components/store/StoreFrontWrapper.tsx';
 ---
 
 <Layout title="Tienda Upper Barber Cuts" description="Productos de cuidado masculino, maquinaria y herramientas recomendadas por Upper Barber Cuts.">
@@ -26,7 +25,7 @@ import { products } from '../../data/products';
 
 		<section class="bg-brand-night/60">
 			<div class="mx-auto max-w-6xl px-6 py-16">
-				<StoreFront client:load products={products} />
+				<StoreFrontWrapper client:load />
 			</div>
 		</section>
 	</main>

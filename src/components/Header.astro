@@ -1,5 +1,5 @@
-<header class="sticky top-0 z-50 border-b border-brand-stone/60 bg-brand-ink/95 backdrop-blur-xl shadow-lg shadow-black/20">
-	<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+<header class="sticky top-0 z-50 border-b border-brand-stone/40 bg-brand-ink/98 backdrop-blur-2xl shadow-xl shadow-black/30">
+	<div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
 	<a href="/" class="group flex items-center gap-3 transition-transform duration-300 hover:scale-105">
 		<img
 			src="/media/image.png"
@@ -11,36 +11,50 @@
 			<p class="text-xs uppercase tracking-[0.32em] text-brand-amber/80 transition-colors duration-300 group-hover:text-brand-amber">Barber Cuts</p>
 		</div>
 	</a>
-		<nav class="ml-auto flex items-center gap-1 overflow-x-auto text-xs uppercase tracking-[0.3em] text-brand-light">
-			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/">
+		<nav class="ml-auto flex items-center gap-2 overflow-x-auto text-xs uppercase tracking-[0.3em] text-brand-light">
+			<a class="group relative rounded-full px-5 py-2.5 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/">
 				<span class="relative z-10">Inicio</span>
-				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+				<span class="absolute inset-0 rounded-full bg-gradient-to-r from-brand-amber/20 via-brand-amber/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 			</a>
-			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/servicios">
+			<a class="group relative rounded-full px-5 py-2.5 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/servicios">
 				<span class="relative z-10">Servicios</span>
-				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+				<span class="absolute inset-0 rounded-full bg-gradient-to-r from-brand-amber/20 via-brand-amber/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 			</a>
-			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/tienda">
+			<a class="group relative rounded-full px-5 py-2.5 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/tienda">
 				<span class="relative z-10">Tienda</span>
-				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+				<span class="absolute inset-0 rounded-full bg-gradient-to-r from-brand-amber/20 via-brand-amber/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 			</a>
-			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/experiencia">
+			<a class="group relative rounded-full px-5 py-2.5 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/experiencia">
 				<span class="relative z-10">Experiencia</span>
-				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+				<span class="absolute inset-0 rounded-full bg-gradient-to-r from-brand-amber/20 via-brand-amber/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 			</a>
-			<a class="relative rounded-full px-4 py-2 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/contacto">
+			<a class="group relative rounded-full px-5 py-2.5 transition-all duration-300 hover:bg-brand-amber/10 hover:text-brand-amber" href="/contacto">
 				<span class="relative z-10">Contacto</span>
-				<span class="absolute inset-0 rounded-full bg-brand-amber/20 opacity-0 transition-opacity duration-300 hover:opacity-100"></span>
+				<span class="absolute inset-0 rounded-full bg-gradient-to-r from-brand-amber/20 via-brand-amber/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
 			</a>
 		</nav>
-		<a
-			href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quisiera%20agendar%20una%20cita."
-			target="_blank"
-			rel="noreferrer"
-			class="group/btn btn-premium ml-4 hidden rounded-full border-2 border-brand-amber bg-brand-amber px-5 py-2 text-xs font-bold uppercase tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)] lg:inline-block"
-		>
-			<span>Reserva</span>
-		</a>
+		<div class="ml-6 flex items-center gap-3">
+			<a
+				href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quisiera%20agendar%20una%20cita."
+				target="_blank"
+				rel="noreferrer"
+				class="group/btn btn-enhanced hidden lg:inline-flex items-center gap-2"
+			>
+				<span>Reserva</span>
+			</a>
+			<a
+				href="/admin/login"
+				class="group/admin-btn relative hidden overflow-hidden rounded-full border-2 border-purple-500/90 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.3em] text-white shadow-xl shadow-purple-500/40 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(168,85,247,0.9)] lg:inline-flex items-center gap-1.5"
+			>
+				<span class="relative z-10 flex items-center gap-1.5">
+					<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+					</svg>
+					Admin
+				</span>
+				<span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover/admin-btn:opacity-100" style="transform: translateX(-100%); transition: transform 0.6s ease, opacity 0.5s ease;"></span>
+			</a>
+		</div>
 	</div>
 </header>
 

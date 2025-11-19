@@ -1,0 +1,21 @@
+{
+  "name": "Upper Barber Cuts",
+  "short_name": "Upper",
+  "description": "Barbería y tienda de cuidado masculino en Manizales",
+  "icons": [
+    {
+      "src": "/media/image.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/media/image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#f7941f",
+  "background_color": "#010101",
+  "display": "standalone"
+}
+

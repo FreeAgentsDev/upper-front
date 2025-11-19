@@ -8,11 +8,17 @@ const { title = 'Upper Barber Cuts', description = 'Barbería y tienda de cuidad
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- Favicons - Prioridad al logo PNG -->
+		<link rel="icon" type="image/png" sizes="32x32" href="/media/image.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/media/image.png" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/media/image.png" />
+		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<meta name="theme-color" content="#f7941f" />
 	</head>
 	<body class="min-h-screen bg-brand-ink text-brand-light antialiased">
 		<slot />

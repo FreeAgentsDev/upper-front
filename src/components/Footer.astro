@@ -2,20 +2,20 @@
 	<!-- Efecto de fondo decorativo mejorado -->
 	<div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(247,148,31,0.05),transparent_50%)]"></div>
 	<div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(247,148,31,0.03),transparent_50%)]"></div>
-	<div class="relative mx-auto grid max-w-7xl gap-12 px-6 py-16 md:grid-cols-4">
+	<div class="relative mx-auto grid max-w-7xl gap-8 sm:gap-10 lg:gap-12 px-4 py-12 sm:px-6 sm:py-16 md:grid-cols-4">
 		<div class="md:col-span-2">
-			<div class="group flex items-center gap-3 transition-transform duration-300 hover:scale-105">
+			<div class="group flex items-center gap-2 sm:gap-3 transition-transform duration-300 hover:scale-105">
 				<img
 					src="/media/image.png"
 					alt="Upper Barber Cuts Logo"
-					class="h-10 w-auto transition-all duration-500 group-hover:drop-shadow-[0_0_15px_rgba(247,148,31,0.6)]"
+					class="h-8 w-auto sm:h-10 transition-all duration-500 group-hover:drop-shadow-[0_0_15px_rgba(247,148,31,0.6)]"
 				/>
 				<div class="leading-tight">
-					<p class="font-black uppercase tracking-[0.3em] text-brand-light transition-colors duration-300 group-hover:text-brand-amber">Upper</p>
-					<p class="text-xs uppercase tracking-[0.32em] text-brand-amber/80 transition-colors duration-300 group-hover:text-brand-amber">Barber Cuts</p>
+					<p class="text-xs sm:text-sm font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-light transition-colors duration-300 group-hover:text-brand-amber">Upper</p>
+					<p class="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.32em] text-brand-amber/80 transition-colors duration-300 group-hover:text-brand-amber">Barber Cuts</p>
 				</div>
 			</div>
-			<p class="mt-6 max-w-md text-sm text-brand-light/70 leading-relaxed">
+			<p class="mt-4 sm:mt-6 max-w-md text-xs sm:text-sm text-brand-light/70 leading-relaxed">
 				Barbería moderna y tienda de cuidado masculino en Manizales. Cortes de precisión, diseño de barba, freestyle y
 				productos profesionales seleccionados por Dayron y el equipo Upper.
 			</p>
@@ -89,13 +89,13 @@
 			</ul>
 		</div>
 	</div>
-	<div class="border-t border-brand-stone/40 bg-brand-ink/50 py-6 backdrop-blur-sm">
-		<div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 text-xs uppercase tracking-[0.3em] text-brand-light/70 sm:flex-row">
-			<p>© {new Date().getFullYear()} Upper Barber Cuts. Todos los derechos reservados.</p>
-			<div class="flex flex-wrap items-center gap-4">
-				<a class="transition hover:text-brand-amber" href="/politica-de-datos">Política de datos</a>
-				<a class="transition hover:text-brand-amber" href="/terminos">Términos de servicio</a>
-				<a class="transition hover:text-brand-amber" href="/reservas">Política de reservas</a>
+	<div class="border-t border-brand-stone/40 bg-brand-ink/50 py-4 sm:py-6 backdrop-blur-sm">
+		<div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-light/70 sm:flex-row">
+			<p class="text-center sm:text-left">© {new Date().getFullYear()} Upper Barber Cuts. Todos los derechos reservados.</p>
+			<div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+				<a class="transition hover:text-brand-amber whitespace-nowrap" href="/politica-de-datos">Política de datos</a>
+				<a class="transition hover:text-brand-amber whitespace-nowrap" href="/terminos">Términos de servicio</a>
+				<a class="transition hover:text-brand-amber whitespace-nowrap" href="/reservas">Política de reservas</a>
 			</div>
 		</div>
 	</div>

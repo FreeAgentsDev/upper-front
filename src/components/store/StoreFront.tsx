@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { Product, ProductCategory } from '../../data/products';
 
 type CartItem = Product & { quantity: number };
 
 const WHATSAPP_NUMBER = '573000000000';
+const CART_STORAGE_KEY = 'upper-cart-storage';
 
 const currency = new Intl.NumberFormat('es-CO', {
   style: 'currency',
@@ -30,14 +31,32 @@ interface StoreFrontProps {
 }
 
 export default function StoreFront({ products }: StoreFrontProps) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  // Inicializar carrito desde localStorage
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(CART_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        console.error("Error loading cart", e);
+        return [];
+      }
+    }
+    return [];
+  });
+
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showComboModal, setShowComboModal] = useState(false);
   const [comboName, setComboName] = useState('');
   const [comboDescription, setComboDescription] = useState('');
-  const [showCartView, setShowCartView] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false); // Estado para el Drawer
+
+  // Persistir carrito al cambiar
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
 
   const handleAddToCart = (product: Product) => {
     setCart((prev) => {
@@ -49,6 +68,8 @@ export default function StoreFront({ products }: StoreFrontProps) {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
+    // Abrir carrito automáticamente al agregar (opcional, buena UX)
+    setIsCartOpen(true);
   };
 
   const handleRemove = (productId: string) => {
@@ -89,16 +110,12 @@ export default function StoreFront({ products }: StoreFrontProps) {
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   }, [cart, total]);
 
-  // Filtrar productos por categoría y búsqueda
+  // Filtrar productos
   const filteredProducts = useMemo(() => {
     let filtered = products;
-    
-    // Filtrar por categoría
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((product) => product.category === selectedCategory);
     }
-    
-    // Filtrar por término de búsqueda
     if (searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase().trim();
       filtered = filtered.filter((product) => {
@@ -108,11 +125,10 @@ export default function StoreFront({ products }: StoreFrontProps) {
         return nameMatch || descMatch || categoryMatch;
       });
     }
-    
     return filtered;
   }, [products, selectedCategory, searchTerm]);
 
-  // Agrupar productos por categoría para el filtro
+  // Agrupar productos para contadores
   const productsByCategory = useMemo(() => {
     const grouped: Record<ProductCategory, Product[]> = {
       cuidado: [],
@@ -128,151 +144,8 @@ export default function StoreFront({ products }: StoreFrontProps) {
 
   const categories: ProductCategory[] = ['cuidado', 'styling', 'herramientas', 'maquinaria'];
 
-  // Vista del carrito para móviles
-  const CartViewMobile = () => (
-    <div className="lg:hidden">
-      {/* Header del carrito */}
-      <div className="mb-6 flex items-center justify-between">
-        <button
-          type="button"
-          onClick={() => setShowCartView(false)}
-          className="flex items-center gap-2 rounded-full border border-brand-stone/60 bg-brand-night/50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-light transition hover:bg-brand-stone/40"
-        >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Volver
-        </button>
-        <div>
-          <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-brand-amber">
-            Carrito Upper
-          </h2>
-          <p className="mt-1 text-xs text-brand-light/50 text-center">
-            {cart.length === 0
-              ? 'Tu carrito está vacío'
-              : `${cart.length} ${cart.length === 1 ? 'producto' : 'productos'}`}
-          </p>
-        </div>
-        <div className="w-24"></div>
-      </div>
-
-      {cart.length === 0 ? (
-        <div className="rounded-2xl border border-brand-stone/40 bg-brand-ink/40 p-12 text-center">
-          <svg className="mx-auto h-16 w-16 text-brand-light/20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-          <p className="text-base text-brand-light/60 mb-6">
-            Tu carrito está vacío
-          </p>
-          <button
-            type="button"
-            onClick={() => setShowCartView(false)}
-            className="rounded-full border-2 border-brand-amber bg-brand-amber px-6 py-3 text-sm font-bold uppercase tracking-[0.2em] text-brand-ink transition hover:bg-brand-amber/90"
-          >
-            Ver Productos
-          </button>
-        </div>
-      ) : (
-        <>
-          {/* Lista de productos */}
-          <div className="space-y-4 mb-6">
-            {cart.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-2xl border border-brand-stone/60 bg-brand-night/80 p-4 backdrop-blur"
-              >
-                <div className="flex items-start gap-4">
-                  {/* Imagen del producto */}
-                  {item.image && (
-                    <img
-                      src={item.image.startsWith('data:') ? item.image : item.image}
-                      alt={item.name}
-                      className="h-20 w-20 flex-shrink-0 rounded-xl object-cover border border-brand-stone/60"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-bold text-brand-light truncate">{item.name}</h3>
-                    <p className="mt-1 text-sm text-brand-amber font-semibold">
-                      {currency.format(item.price)} c/u
-                    </p>
-                    {/* Controles de cantidad */}
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => handleDecrease(item.id)}
-                          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-brand-amber/40 bg-brand-amber/10 text-brand-amber transition hover:bg-brand-amber hover:text-brand-ink"
-                        >
-                          −
-                        </button>
-                        <span className="min-w-[2.5rem] text-center text-base font-bold text-brand-light">
-                          {item.quantity}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleAddToCart(item)}
-                          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-brand-amber/40 bg-brand-amber/10 text-brand-amber transition hover:bg-brand-amber hover:text-brand-ink"
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-lg font-black text-brand-amber">
-                          {currency.format(item.price * item.quantity)}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => handleRemove(item.id)}
-                          className="mt-1 text-xs uppercase tracking-[0.2em] text-brand-light/40 transition hover:text-red-400"
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Total y botón de checkout */}
-          <div className="sticky bottom-0 space-y-4 rounded-2xl border-2 border-brand-stone/60 bg-brand-night/95 p-6 backdrop-blur-xl">
-            <div className="flex items-center justify-between border-b border-brand-stone/40 pb-4">
-              <span className="text-base font-semibold text-brand-light/70">Total estimado</span>
-              <span className="text-3xl font-black text-brand-amber">
-                {currency.format(total)}
-              </span>
-            </div>
-            <p className="text-xs text-brand-light/50 text-center">
-              El pedido se confirma por WhatsApp. Los precios pueden variar según disponibilidad.
-            </p>
-            <button
-              type="button"
-              onClick={() => window.open(whatsappLink, '_blank')}
-              className="w-full rounded-full border-2 border-[#25D366] bg-[#25D366] px-6 py-4 text-base font-bold uppercase tracking-[0.2em] text-white shadow-lg shadow-[#25D366]/50 transition-all duration-200 hover:scale-105 hover:shadow-[#25D366]/70"
-            >
-              Enviar por WhatsApp
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-
-  // Si estamos en vista de carrito móvil, mostrar solo eso
-  if (showCartView) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-        <CartViewMobile />
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto max-w-7xl space-y-10">
+    <div className="mx-auto max-w-7xl space-y-10 pb-24">
       {/* Barra de búsqueda */}
       <div className="relative">
         <div className="relative">
@@ -323,11 +196,10 @@ export default function StoreFront({ products }: StoreFrontProps) {
         <button
           type="button"
           onClick={() => setSelectedCategory('all')}
-          className={`rounded-full border px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] transition-all ${
-            selectedCategory === 'all'
-              ? 'border-brand-amber bg-brand-amber text-brand-ink'
-              : 'border-brand-stone/60 bg-brand-night/60 text-brand-light/70 hover:border-brand-amber/60 hover:text-brand-amber'
-          }`}
+          className={`rounded-full border px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] transition-all ${selectedCategory === 'all'
+            ? 'border-brand-amber bg-brand-amber text-brand-ink'
+            : 'border-brand-stone/60 bg-brand-night/60 text-brand-light/70 hover:border-brand-amber/60 hover:text-brand-amber'
+            }`}
         >
           Todos
         </button>
@@ -339,11 +211,10 @@ export default function StoreFront({ products }: StoreFrontProps) {
               key={category}
               type="button"
               onClick={() => setSelectedCategory(category)}
-              className={`rounded-full border px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] transition-all ${
-                selectedCategory === category
-                  ? 'border-brand-amber bg-brand-amber text-brand-ink'
-                  : 'border-brand-stone/60 bg-brand-night/60 text-brand-light/70 hover:border-brand-amber/60 hover:text-brand-amber'
-              }`}
+              className={`rounded-full border px-6 py-3 text-sm font-semibold uppercase tracking-[0.2em] transition-all ${selectedCategory === category
+                ? 'border-brand-amber bg-brand-amber text-brand-ink'
+                : 'border-brand-stone/60 bg-brand-night/60 text-brand-light/70 hover:border-brand-amber/60 hover:text-brand-amber'
+                }`}
             >
               <span className="mr-2">{categoryIcons[category]}</span>
               {categoryLabels[category]} ({count})
@@ -352,220 +223,204 @@ export default function StoreFront({ products }: StoreFrontProps) {
         })}
       </div>
 
-      <div className="grid gap-6 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_400px]">
-        {/* Grid de productos */}
-        <div className="grid gap-5 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-2">
-          {filteredProducts.map((product) => (
-            <article
-              key={product.id}
-              className="group relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border-2 border-brand-stone/60 bg-brand-night/80 shadow-2xl shadow-black/40 transition-all duration-200 hover:-translate-y-2 hover:border-brand-amber/80 hover:shadow-[0_0_40px_rgba(247,148,31,0.4)]"
-            >
-              {/* Imagen principal */}
-              {product.image ? (
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-brand-ink">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6">
-                    <span className="inline-block rounded-full border border-brand-amber/60 bg-brand-amber/20 px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber backdrop-blur-sm">
-                      {categoryLabels[product.category]}
-                    </span>
-                  </div>
-                  {/* Botón de detalles sobre la imagen */}
-                  <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedProduct(product)}
-                      className="group/btn btn-premium w-full rounded-full border-2 border-brand-amber bg-brand-amber/95 backdrop-blur-sm px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:bg-brand-amber hover:shadow-[0_0_25px_rgba(247,148,31,0.8)] hover:scale-105"
-                    >
-                      <span className="flex items-center justify-center gap-2">
-                        <span>Ver Detalles</span>
-                        <span className="transition-transform group-hover/btn:translate-x-1">→</span>
-                      </span>
-                    </button>
-                  </div>
+      {/* Grid de productos (Ahora ocupa todo el ancho) */}
+      <div className="grid gap-5 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filteredProducts.map((product) => (
+          <article
+            key={product.id}
+            className="group relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border-2 border-brand-stone/60 bg-brand-night/80 shadow-2xl shadow-black/40 transition-all duration-200 hover:-translate-y-2 hover:border-brand-amber/80 hover:shadow-[0_0_40px_rgba(247,148,31,0.4)]"
+          >
+            {/* Imagen principal */}
+            {product.image ? (
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-brand-ink">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6">
+                  <span className="inline-block rounded-full border border-brand-amber/60 bg-brand-amber/20 px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber backdrop-blur-sm">
+                    {categoryLabels[product.category]}
+                  </span>
                 </div>
-              ) : (
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-brand-stone/40 to-brand-night">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-6xl opacity-20">{categoryIcons[product.category]}</span>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6">
-                    <span className="inline-block rounded-full border border-brand-amber/60 bg-brand-amber/20 px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber backdrop-blur-sm">
-                      {categoryLabels[product.category]}
-                    </span>
-                  </div>
-                  {/* Botón de detalles sobre el placeholder */}
-                  <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedProduct(product)}
-                      className="group/btn btn-premium w-full rounded-full border-2 border-brand-amber bg-brand-amber/95 backdrop-blur-sm px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:bg-brand-amber hover:shadow-[0_0_25px_rgba(247,148,31,0.8)] hover:scale-105"
-                    >
-                      <span className="flex items-center justify-center gap-2">
-                        <span>Ver Detalles</span>
-                        <span className="transition-transform group-hover/btn:translate-x-1">→</span>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Contenido */}
-              <div className="flex flex-1 flex-col p-4 sm:p-5 lg:p-6">
-                <h3 className="text-lg sm:text-xl font-black text-brand-light leading-tight">{product.name}</h3>
-                <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-relaxed text-brand-light/70">
-                  {product.description}
-                </p>
-
-                <div className="mt-4 sm:mt-6 space-y-3 border-t border-brand-stone/40 pt-4 sm:pt-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <p className="text-xl sm:text-2xl font-black text-brand-amber">
-                      {currency.format(product.price)}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => handleAddToCart(product)}
-                      className="w-full sm:w-auto group/btn btn-premium flex items-center justify-center gap-2 rounded-full border-2 border-brand-amber bg-brand-amber px-4 py-2 sm:px-6 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)]"
-                    >
-                      <span>Añadir</span>
+                {/* Botón de detalles */}
+                <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedProduct(product)}
+                    className="group/btn btn-premium w-full rounded-full border-2 border-brand-amber bg-brand-amber/95 backdrop-blur-sm px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:bg-brand-amber hover:shadow-[0_0_25px_rgba(247,148,31,0.8)] hover:scale-105"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <span>Ver Detalles</span>
                       <span className="transition-transform group-hover/btn:translate-x-1">→</span>
-                    </button>
-                  </div>
+                    </span>
+                  </button>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Carrito lateral - Solo en desktop */}
-        <aside className="hidden lg:block sticky top-6 h-max space-y-6 rounded-3xl border border-brand-stone/60 bg-brand-night/90 p-6 backdrop-blur-xl">
-          <div>
-            <h2 className="text-base sm:text-lg font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber">
-              Carrito Upper
-            </h2>
-            <p className="mt-1 sm:mt-2 text-[10px] sm:text-xs text-brand-light/50">
-              {cart.length === 0
-                ? 'Tu carrito está vacío'
-                : `${cart.length} ${cart.length === 1 ? 'producto' : 'productos'}`}
-            </p>
-          </div>
-
-          {cart.length === 0 ? (
-            <div className="rounded-2xl border border-brand-stone/40 bg-brand-ink/40 p-8 text-center">
-              <p className="text-sm text-brand-light/60">
-                Agrega tus productos favoritos y envíalos por WhatsApp para coordinar pago y entrega.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {cart.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl border border-brand-stone/60 bg-brand-ink/60 p-4 backdrop-blur"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-brand-light truncate">{item.name}</p>
-                      <p className="mt-1 text-xs text-brand-light/60">
-                        {currency.format(item.price)} c/u
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemove(item.id)}
-                      className="flex-shrink-0 text-xs uppercase tracking-[0.2em] text-brand-light/40 transition hover:text-red-400"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => handleDecrease(item.id)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-amber/40 text-brand-amber transition hover:bg-brand-amber hover:text-brand-ink"
-                      >
-                        −
-                      </button>
-                      <span className="min-w-[2rem] text-center text-sm font-semibold text-brand-light">
-                        {item.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleAddToCart(item)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-amber/40 text-brand-amber transition hover:bg-brand-amber hover:text-brand-ink"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <p className="text-sm font-semibold text-brand-amber">
-                      {currency.format(item.price * item.quantity)}
-                    </p>
-                  </div>
+            ) : (
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-brand-stone/40 to-brand-night">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-6xl opacity-20">{categoryIcons[product.category]}</span>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {cart.length > 0 && (
-            <div className="space-y-4 border-t border-brand-stone/60 pt-6">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-brand-light/70">Total estimado</span>
-                <span className="text-2xl font-black text-brand-amber">
-                  {currency.format(total)}
-                </span>
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6">
+                  <span className="inline-block rounded-full border border-brand-amber/60 bg-brand-amber/20 px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber backdrop-blur-sm">
+                    {categoryLabels[product.category]}
+                  </span>
+                </div>
+                <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedProduct(product)}
+                    className="group/btn btn-premium w-full rounded-full border-2 border-brand-amber bg-brand-amber/95 backdrop-blur-sm px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:bg-brand-amber hover:shadow-[0_0_25px_rgba(247,148,31,0.8)] hover:scale-105"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <span>Ver Detalles</span>
+                      <span className="transition-transform group-hover/btn:translate-x-1">→</span>
+                    </span>
+                  </button>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowComboModal(true)}
-                className="group border-glow block w-full rounded-full border-2 border-brand-amber/60 bg-brand-amber/10 px-6 py-3 text-center text-xs font-bold uppercase tracking-[0.3em] text-brand-amber backdrop-blur transition-all duration-200 hover:bg-brand-amber/20 hover:scale-105"
-              >
-                Crear Combo de Servicios
-              </button>
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-premium block rounded-full border-2 border-brand-amber bg-brand-amber px-6 py-4 text-center text-xs font-bold uppercase tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)]"
-              >
-                Finalizar por WhatsApp
-              </a>
-              <p className="text-[11px] leading-relaxed text-brand-light/50">
-                El pedido se confirma por WhatsApp. Los precios pueden variar según disponibilidad.
-                Nuestro equipo te contactará para coordinar pago, envío o recogida en el local.
-              </p>
-            </div>
-          )}
-        </aside>
+            )}
 
+            {/* Contenido */}
+            <div className="flex flex-1 flex-col p-4 sm:p-5 lg:p-6">
+              <h3 className="text-lg sm:text-xl font-black text-brand-light leading-tight">{product.name}</h3>
+              <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-relaxed text-brand-light/70 line-clamp-2">
+                {product.description}
+              </p>
+
+              <div className="mt-4 sm:mt-6 space-y-3 border-t border-brand-stone/40 pt-4 sm:pt-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <p className="text-xl sm:text-2xl font-black text-brand-amber">
+                    {currency.format(product.price)}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleAddToCart(product)}
+                    className="w-full sm:w-auto group/btn btn-premium flex items-center justify-center gap-2 rounded-full border-2 border-brand-amber bg-brand-amber px-4 py-2 sm:px-6 sm:py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)]"
+                  >
+                    <span>Añadir</span>
+                    <span className="transition-transform group-hover/btn:translate-x-1">→</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
 
-      {/* Botón flotante del carrito para móviles */}
+      {/* --------- BOTÓN FLOTANTE (Visible siempre si hay items) --------- */}
       {cart.length > 0 && (
         <button
           type="button"
-          onClick={() => setShowCartView(true)}
-          className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand-amber shadow-2xl shadow-brand-amber/50 transition-all hover:scale-110 hover:shadow-brand-amber/70 active:scale-95 lg:hidden"
+          onClick={() => setIsCartOpen(true)}
+          className="fixed bottom-4 right-20 sm:bottom-6 sm:right-24 z-[50] flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-brand-amber shadow-[0_0_30px_rgba(247,148,31,0.5)] transition-all hover:scale-110 hover:shadow-[0_0_50px_rgba(247,148,31,0.7)] active:scale-95 animate-bounce-subtle"
           aria-label="Ver carrito"
         >
-          <svg className="h-6 w-6 text-brand-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-6 w-6 sm:h-7 sm:w-7 text-brand-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white shadow-lg">
+          <span className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-red-600 border-2 border-brand-ink text-[10px] sm:text-xs font-bold text-white shadow-lg">
             {cart.reduce((sum, item) => sum + item.quantity, 0)}
           </span>
         </button>
       )}
 
-      {/* Modal de Detalles */}
+      {/* --------- DRAWER CARRITO (Slide-over) --------- */}
+      {/* Overlay */}
+      {isCartOpen && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm transition-opacity"
+          onClick={() => setIsCartOpen(false)}
+        />
+      )}
+
+      {/* Panel */}
+      <div className={`
+        fixed inset-y-0 right-0 z-[70] w-full max-w-md transform bg-brand-night border-l border-brand-stone/40 shadow-2xl transition-transform duration-300 ease-in-out
+        ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}
+      `}>
+        <div className="flex h-full flex-col">
+          {/* Header Drawer */}
+          <div className="flex items-center justify-between border-b border-brand-stone/60 px-6 py-6 bg-brand-ink/50">
+            <h2 className="text-xl font-black uppercase tracking-[0.2em] text-brand-amber">Tu Carrito</h2>
+            <button
+              onClick={() => setIsCartOpen(false)}
+              className="rounded-full p-2 text-brand-light/60 hover:bg-brand-stone/40 hover:text-brand-light transition"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Listado Items */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            {cart.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
+                <svg className="h-16 w-16 mb-4 text-brand-stone" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <p className="uppercase tracking-widest font-bold text-sm">Tu carrito está vacío</p>
+              </div>
+            ) : (
+              cart.map((item) => (
+                <div key={item.id} className="flex gap-4 p-3 rounded-xl border border-brand-stone/40 bg-brand-ink/40">
+                  {item.image && (
+                    <img src={item.image} alt="" className="h-16 w-16 rounded-lg object-cover bg-brand-stone/20" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-brand-light truncate">{item.name}</h4>
+                    <p className="text-xs text-brand-amber font-mono mt-1">{currency.format(item.price)}</p>
+
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center gap-3">
+                        <button onClick={() => handleDecrease(item.id)} className="h-6 w-6 rounded border border-brand-stone text-brand-stone hover:border-brand-amber hover:text-brand-amber flex items-center justify-center">-</button>
+                        <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
+                        <button onClick={() => handleAddToCart(item)} className="h-6 w-6 rounded border border-brand-stone text-brand-stone hover:border-brand-amber hover:text-brand-amber flex items-center justify-center">+</button>
+                      </div>
+                      <button onClick={() => handleRemove(item.id)} className="text-xs text-red-400 hover:text-red-300 uppercase tracking-wider">Eliminar</button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Footer Drawer */}
+          {cart.length > 0 && (
+            <div className="border-t border-brand-stone/60 p-6 bg-brand-ink/50 space-y-4">
+              <div className="flex justify-between items-end">
+                <span className="text-sm font-bold text-brand-light/60 uppercase tracking-widest">Total Estimado</span>
+                <span className="text-3xl font-black text-brand-amber">{currency.format(total)}</span>
+              </div>
+
+              <button
+                onClick={() => setShowComboModal(true)}
+                className="w-full py-3 rounded-lg border border-brand-amber/30 text-brand-amber text-xs font-bold uppercase tracking-[0.2em] hover:bg-brand-amber/10 transition"
+              >
+                🎁 Crear Combo
+              </button>
+
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                className="block w-full py-4 rounded-lg bg-green-600 text-white text-center text-sm font-bold uppercase tracking-[0.2em] hover:bg-green-500 shadow-lg shadow-green-600/20 transition-all hover:scale-[1.02]"
+              >
+                Completar por WhatsApp
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Modal de Detalles (Mantiene la lógica existente) */}
       {selectedProduct && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[80] flex items-center justify-center p-4"
           onClick={() => setSelectedProduct(null)}
         >
           {/* Overlay */}
@@ -644,6 +499,7 @@ export default function StoreFront({ products }: StoreFrontProps) {
                     type="button"
                     onClick={() => {
                       handleAddToCart(selectedProduct);
+                      setSelectedProduct(null); // Cerrar modal al agregar
                     }}
                     className="group/btn flex items-center justify-center gap-2 rounded-full border-2 border-brand-amber bg-brand-amber px-8 py-4 text-sm font-bold uppercase tracking-[0.3em] text-brand-ink transition-all hover:bg-transparent hover:text-brand-amber"
                   >
@@ -664,16 +520,16 @@ export default function StoreFront({ products }: StoreFrontProps) {
         </div>
       )}
 
-      {/* Modal de Crear Combo */}
+      {/* Modal de Crear Combo (Mantiene la lógica existente pero adaptada al drawer behavior) */}
       {showComboModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[90] flex items-center justify-center p-4"
           onClick={() => setShowComboModal(false)}
         >
           {/* Overlay */}
-          <div className="absolute inset-0 bg-brand-ink/90 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-brand-ink/95 backdrop-blur-md" />
 
-          {/* Modal Content */}
+          {/* Modal Combo Content (Reutilizado logicamente pero asegurando z-index alto) */}
           <div
             className="relative z-10 w-full max-w-2xl rounded-3xl border border-brand-stone/60 bg-brand-night/95 shadow-2xl shadow-black/60"
             onClick={(e) => e.stopPropagation()}
@@ -771,7 +627,8 @@ export default function StoreFront({ products }: StoreFrontProps) {
                     setComboName('');
                     setComboDescription('');
                     setCart([]);
-                    alert('¡Combo creado exitosamente! Puedes verlo en la página de servicios.');
+                    window.location.reload(); // Para asegurar que se vea la actualización si es necesario
+                    alert('¡Combo creado exitosamente!');
                   }}
                   className="flex-1 rounded-full border-2 border-brand-amber bg-brand-amber px-6 py-4 text-center text-xs font-bold uppercase tracking-[0.3em] text-brand-ink transition-all hover:bg-transparent hover:text-brand-amber"
                 >

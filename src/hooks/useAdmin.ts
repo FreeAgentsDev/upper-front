@@ -1,122 +1,135 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Service } from '../data/services';
 import type { Product } from '../data/products';
 import type { CustomCombo } from '../data/combos';
-import { storageService } from '../services/storage';
+import { apiService } from '../services/api';
 
-// Importar datos iniciales
-import { principalServices, comboServices, sinCitaServices } from '../data/services';
-import { products as initialProducts } from '../data/products';
-import { getCustomCombos } from '../data/combos'; // Mantenemos compatibilidad por ahora
+// Datos locales para sincronización
+// import { principalServices, sinCitaServices } from '../data/services';
+// import { comboServices } from '../data/combos';
+// import { products as localProducts } from '../data/products';
 
 export function useAdmin() {
     const [services, setServices] = useState<Service[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [combos, setCombos] = useState<CustomCombo[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // Cargar datos al inicio
-    const refreshData = () => {
+    const refreshData = useCallback(async () => {
         setLoading(true);
-        // Combina servicios iniciales + guardados
-        const initialServices = [...principalServices, ...comboServices, ...sinCitaServices];
-        setServices(storageService.getServices(initialServices));
+        setError(null);
+        try {
+            const [fetchedServices, fetchedProducts, fetchedCombos] = await Promise.all([
+                apiService.getServices(),
+                apiService.getProducts(),
+                apiService.getCombos()
+            ]);
 
-        setProducts(storageService.getProducts(initialProducts));
+            setServices(fetchedServices);
+            setProducts(fetchedProducts);
+            setCombos(fetchedCombos);
 
-        // Combos es un caso especial porque getCustomCombos ya existe, pero migraremos
-        const loadedCombos = storageService.getCombos([]);
-
-        // Convertir los combos estáticos a formato CustomCombo visual
-        const staticCombos: CustomCombo[] = comboServices.map(s => ({
-            id: s.id,
-            name: s.name,
-            services: [], // Los combos estáticos no tienen lista de IDs de sub-servicios
-            price: s.priceNumber,
-            description: s.summary,
-            createdAt: 0
-        }));
-
-        if (loadedCombos.length === 0) {
-            // Fallback a la función antigua si storage está vacío
-            const legacyCombos = getCustomCombos();
-            setCombos([...staticCombos, ...legacyCombos]);
-        } else {
-            setCombos([...staticCombos, ...loadedCombos]);
+        } catch (err: any) {
+            console.error('Error cargando datos de la API:', err);
+            setError(err.message || 'Error al conectar con el servidor');
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
-    };
+    }, []);
 
     useEffect(() => {
         refreshData();
+    }, [refreshData]);
 
-        // Escuchar cambios de otras pestañas o componentes
-        const handleStorageChange = () => refreshData();
-        window.addEventListener('storage-update', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('storage-update', handleStorageChange);
-        };
-    }, []);
-
-    // --- ACTIONS (Controller Logic) ---
+    // --- ACTIONS (API Calls) ---
 
     // Services
-    const addService = (newService: Service) => {
-        const updated = [...services, newService];
-        storageService.saveServices(updated);
-        setServices(updated);
+    const addService = async (newService: Service) => {
+        try {
+            const created = await apiService.createService(newService);
+            setServices(prev => [...prev, created]);
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
-    const updateService = (updatedService: Service) => {
-        const updated = services.map(s => s.id === updatedService.id ? updatedService : s);
-        storageService.saveServices(updated);
-        setServices(updated);
+    const updateService = async (updatedService: Service) => {
+        try {
+            const updated = await apiService.updateService(updatedService.id, updatedService);
+            setServices(prev => prev.map(s => s.id === updated.id ? updated : s));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
-    const deleteService = (id: string) => {
-        const updated = services.filter(s => s.id !== id);
-        storageService.saveServices(updated);
-        setServices(updated);
+    const deleteService = async (id: string) => {
+        if (!confirm('¿Estás seguro de eliminar este servicio?')) return;
+        try {
+            await apiService.deleteService(id);
+            setServices(prev => prev.filter(s => s.id !== id));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
     // Products
-    const addProduct = (newProduct: Product) => {
-        const updated = [...products, newProduct];
-        storageService.saveProducts(updated);
-        setProducts(updated);
+    const addProduct = async (newProduct: Product) => {
+        try {
+            const created = await apiService.createProduct(newProduct);
+            setProducts(prev => [...prev, created]);
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
-    const updateProduct = (updatedProduct: Product) => {
-        const updated = products.map(p => p.id === updatedProduct.id ? updatedProduct : p);
-        storageService.saveProducts(updated);
-        setProducts(updated);
+    const updateProduct = async (updatedProduct: Product) => {
+        try {
+            const updated = await apiService.updateProduct(updatedProduct.id, updatedProduct);
+            setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
-    const deleteProduct = (id: string) => {
-        const updated = products.filter(p => p.id !== id);
-        storageService.saveProducts(updated);
-        setProducts(updated);
+    const deleteProduct = async (id: string) => {
+        if (!confirm('¿Estás seguro de eliminar este producto?')) return;
+        try {
+            await apiService.deleteProduct(id);
+            setProducts(prev => prev.filter(p => p.id !== id));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
     // Combos
-    const addCombo = (newCombo: CustomCombo) => {
-        const updated = [...combos, newCombo];
-        storageService.saveCombos(updated);
-        setCombos(updated);
+    const addCombo = async (newCombo: CustomCombo) => {
+        try {
+            const created = await apiService.createCombo(newCombo);
+            setCombos(prev => [...prev, created]);
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
-    const updateCombo = (updatedCombo: CustomCombo) => {
-        const updated = combos.map(c => c.id === updatedCombo.id ? updatedCombo : c);
-        storageService.saveCombos(updated);
-        setCombos(updated);
+    const updateCombo = async (updatedCombo: CustomCombo) => {
+        try {
+            const updated = await apiService.updateCombo(updatedCombo);
+            setCombos(prev => prev.map(c => c.id === updatedCombo.id ? updated : c));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
-    const deleteCombo = (id: string) => {
-        const updated = combos.filter(c => c.id !== id);
-        storageService.saveCombos(updated);
-        setCombos(updated);
+    const deleteCombo = async (id: string) => {
+        if (!confirm('¿Estás seguro de eliminar este combo?')) return;
+        try {
+            await apiService.deleteCombo(id);
+            setCombos(prev => prev.filter(c => c.id !== id));
+        } catch (err: any) {
+            setError(err.message);
+        }
     };
 
     return {
@@ -125,6 +138,7 @@ export function useAdmin() {
         products,
         combos,
         loading,
+        error,
 
         // Methods
         refreshData,
@@ -145,3 +159,4 @@ export function useAdmin() {
         deleteCombo
     };
 }
+

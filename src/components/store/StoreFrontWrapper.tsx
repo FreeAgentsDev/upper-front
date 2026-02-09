@@ -6,3 +6,5 @@ export default function StoreFrontWrapper() {
 	return <StoreFront products={products} />;
 }
 
+
+

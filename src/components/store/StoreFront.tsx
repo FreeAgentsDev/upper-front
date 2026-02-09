@@ -112,6 +112,7 @@ export default function StoreFront({ products }: StoreFrontProps) {
 
   // Filtrar productos
   const filteredProducts = useMemo(() => {
+    if (!products) return [];
     let filtered = products;
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((product) => product.category === selectedCategory);
@@ -119,32 +120,41 @@ export default function StoreFront({ products }: StoreFrontProps) {
     if (searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase().trim();
       filtered = filtered.filter((product) => {
-        const nameMatch = product.name.toLowerCase().includes(searchLower);
-        const descMatch = product.description.toLowerCase().includes(searchLower);
-        const categoryMatch = categoryLabels[product.category].toLowerCase().includes(searchLower);
+        const nameMatch = product.name?.toLowerCase().includes(searchLower);
+        const descMatch = product.description?.toLowerCase().includes(searchLower);
+        const categoryLabel = categoryLabels[product.category as ProductCategory] || product.category;
+        const categoryMatch = categoryLabel?.toLowerCase().includes(searchLower);
         return nameMatch || descMatch || categoryMatch;
       });
     }
-    return filtered;
+    return [...filtered].sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
   }, [products, selectedCategory, searchTerm]);
+
 
   // Agrupar productos para contadores
   const productsByCategory = useMemo(() => {
-    const grouped: Record<ProductCategory, Product[]> = {
+    const grouped: Record<string, Product[]> = {
       cuidado: [],
       styling: [],
       herramientas: [],
       maquinaria: [],
     };
+    if (!products) return grouped;
     products.forEach((product) => {
-      grouped[product.category].push(product);
+      const cat = product.category || 'other';
+      if (!grouped[cat]) {
+        grouped[cat] = [];
+      }
+      grouped[cat].push(product);
     });
     return grouped;
   }, [products]);
 
+
   const categories: ProductCategory[] = ['cuidado', 'styling', 'herramientas', 'maquinaria'];
 
   return (
+
     <div className="mx-auto max-w-7xl space-y-10 pb-24">
       {/* Barra de búsqueda */}
       <div className="relative">
@@ -226,6 +236,8 @@ export default function StoreFront({ products }: StoreFrontProps) {
       {/* Grid de productos (Ahora ocupa todo el ancho) */}
       <div className="grid gap-5 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredProducts.map((product) => (
+
+
           <article
             key={product.id}
             className="group relative flex flex-col overflow-hidden rounded-2xl sm:rounded-3xl border-2 border-brand-stone/60 bg-brand-night/80 shadow-2xl shadow-black/40 transition-all duration-200 hover:-translate-y-2 hover:border-brand-amber/80 hover:shadow-[0_0_40px_rgba(247,148,31,0.4)]"
@@ -238,7 +250,9 @@ export default function StoreFront({ products }: StoreFrontProps) {
                   alt={product.name}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   loading="lazy"
+                  onError={(e) => { e.currentTarget.src = '/media/image.png'; }}
                 />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6">
                   <span className="inline-block rounded-full border border-brand-amber/60 bg-brand-amber/20 px-2 py-1 sm:px-3 sm:py-1.5 lg:px-4 lg:py-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber backdrop-blur-sm">
@@ -310,6 +324,7 @@ export default function StoreFront({ products }: StoreFrontProps) {
           </article>
         ))}
       </div>
+
 
       {/* --------- BOTÓN FLOTANTE (Visible siempre si hay items) --------- */}
       {cart.length > 0 && (
@@ -398,6 +413,13 @@ export default function StoreFront({ products }: StoreFrontProps) {
               </div>
 
               <button
+                onClick={() => setIsCartOpen(false)}
+                className="w-full py-3 rounded-lg border border-brand-stone/40 text-brand-light/60 hover:text-brand-light hover:border-brand-light/60 text-xs font-bold uppercase tracking-[0.2em] transition"
+              >
+                Seguir Comprando
+              </button>
+
+              <button
                 onClick={() => setShowComboModal(true)}
                 className="w-full py-3 rounded-lg border border-brand-amber/30 text-brand-amber text-xs font-bold uppercase tracking-[0.2em] hover:bg-brand-amber/10 transition"
               >
@@ -455,7 +477,9 @@ export default function StoreFront({ products }: StoreFrontProps) {
                       src={selectedProduct.image}
                       alt={selectedProduct.name}
                       className="h-full w-full object-cover"
+                      onError={(e) => { e.currentTarget.src = '/media/image.png'; }}
                     />
+
                   </div>
                 ) : (
                   <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-brand-stone/60 bg-gradient-to-br from-brand-stone/40 to-brand-night">

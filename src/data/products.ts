@@ -160,5 +160,3 @@ export const products: Product[] = [
     category: 'herramientas',
   },
 ];
-
-

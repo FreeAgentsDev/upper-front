@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 
 type AdminTab = 'services' | 'products' | 'combos';
 
@@ -14,19 +14,19 @@ export default function AdminLayout({ activeTab, onTabChange, children, onLogout
         <div className="min-h-screen bg-brand-ink text-brand-light font-sans selection:bg-brand-amber/30">
             {/* Top Bar / Header */}
             <header className="sticky top-0 z-40 border-b border-brand-stone/50 bg-brand-ink/95 backdrop-blur-xl">
-                <div className="flex items-center justify-between px-6 py-4">
-                    <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-amber/10 text-brand-amber ring-1 ring-brand-amber/50">
-                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-brand-amber/10 text-brand-amber ring-1 ring-brand-amber/50">
+                            <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                         </div>
                         <div>
-                            <h1 className="text-xl font-black uppercase tracking-wider text-brand-light">
+                            <h1 className="text-base sm:text-xl font-black uppercase tracking-wider text-brand-light">
                                 Panel <span className="text-brand-amber">Upper</span>
                             </h1>
-                            <p className="text-[10px] uppercase tracking-[0.2em] text-brand-light/50 animate-pulse">
+                            <p className="text-[8px] sm:text-[10px] uppercase tracking-[0.2em] text-brand-light/50 animate-pulse">
                                 Modo Edición
                             </p>
                         </div>
@@ -34,9 +34,9 @@ export default function AdminLayout({ activeTab, onTabChange, children, onLogout
 
                     <button
                         onClick={onLogout}
-                        className="group flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-400 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
+                        className="group flex items-center gap-1 sm:gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-red-400 transition-all hover:border-red-500 hover:bg-red-500 hover:text-white"
                     >
-                        <span>Salir</span>
+                        <span className="hidden xs:inline">Salir</span>
                         <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
@@ -44,7 +44,7 @@ export default function AdminLayout({ activeTab, onTabChange, children, onLogout
                 </div>
 
                 {/* Navigation Tabs */}
-                <nav className="flex gap-1 overflow-x-auto border-t border-brand-stone/30 px-6 py-2">
+                <nav className="flex gap-1 overflow-x-auto no-scrollbar scroll-smooth border-t border-brand-stone/30 px-4 sm:px-6 py-2">
                     <TabButton
                         active={activeTab === 'services'}
                         onClick={() => onTabChange('services')}
@@ -72,11 +72,12 @@ export default function AdminLayout({ activeTab, onTabChange, children, onLogout
             </header>
 
             {/* Main Content Area */}
-            <main className="p-6">
+            <main className="p-4 sm:p-6 lg:p-8">
                 <div className="mx-auto max-w-7xl animate-fade-in">
                     {children}
                 </div>
             </main>
+
         </div>
     );
 }
@@ -86,17 +87,17 @@ function TabButton({ active, onClick, children, icon }: { active: boolean; onCli
         <button
             onClick={onClick}
             className={`
-        group flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-widest transition-all
+        group flex shrink-0 items-center gap-2 rounded-lg px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all
         ${active
                     ? 'bg-brand-amber text-brand-ink shadow-[0_0_20px_rgba(247,148,31,0.4)] scale-105'
                     : 'text-brand-light/60 hover:bg-brand-stone/40 hover:text-brand-light'
                 }
       `}
         >
-            <svg className={`h-4 w-4 ${active ? 'text-brand-ink' : 'text-brand-light/60 group-hover:text-brand-light'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${active ? 'text-brand-ink' : 'text-brand-light/60 group-hover:text-brand-light'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {icon}
             </svg>
-            {children}
+            <span className="whitespace-nowrap">{children}</span>
         </button>
     );
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Service } from '../../data/services';
 import type { Product } from '../../data/products';
-import { principalServices, comboServices, sinCitaServices } from '../../data/services';
+import { principalServices, sinCitaServices } from '../../data/services';
+import { comboServices } from '../../data/combos';
 import { products as defaultProducts } from '../../data/products';
 import { apiService } from '../../services/api';
 

@@ -1,3 +1,4 @@
+// Force rebuild
 import { useEffect, useState } from 'react';
 import type { Service } from '../../data/services';
 import type { Product } from '../../data/products';

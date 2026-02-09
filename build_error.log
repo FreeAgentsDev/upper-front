@@ -1,0 +1,32 @@
+
+> false@0.0.1 build
+> astro build
+
+[2m14:45:25[22m [34m[content][39m Syncing content
+[2m14:45:25[22m [34m[content][39m Synced content
+[2m14:45:25[22m [34m[types][39m Generated [2m89ms[22m
+[2m14:45:25[22m [34m[build][39m output: [34m"static"[39m
+[2m14:45:25[22m [34m[build][39m mode: [34m"static"[39m
+[2m14:45:25[22m [34m[build][39m directory: [34mD:\Dev\FreeAgents\upper\dist\[39m
+[2m14:45:25[22m [34m[build][39m Collecting build info...
+[2m14:45:25[22m [34m[build][39m [32mÔ£ô Completed in 130ms.[39m
+[2m14:45:25[22m [34m[build][39m Building static entrypoints...
+14:45:27 [ERROR] [vite] Ô£ù Build failed in 1.91s
+src/components/admin/DataLoader.tsx (4:28): "comboServices" is not exported by "src/data/services.ts", imported by "src/components/admin/DataLoader.tsx".
+file: D:/Dev/FreeAgents/upper/src/components/admin/DataLoader.tsx:4:28
+
+2: import type { Service } from '../../data/services';
+3: import type { Product } from '../../data/products';
+4: import { principalServices, comboServices, sinCitaServices } from '../../data/services';
+                               ^
+5: import { products as defaultProducts } from '../../data/products';
+6: import { apiService } from '../../services/api';
+
+  Location:
+    D:/Dev/FreeAgents/upper/src/components/admin/DataLoader.tsx:4:28
+  Stack trace:
+    at getRollupError (file:///D:/Dev/FreeAgents/upper/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at Module.error (file:///D:/Dev/FreeAgents/upper/node_modules/rollup/dist/es/shared/node-entry.js:16946:16)
+    at ModuleScope.findVariable (file:///D:/Dev/FreeAgents/upper/node_modules/rollup/dist/es/shared/node-entry.js:15067:39)
+    at FunctionBodyScope.findVariable (file:///D:/Dev/FreeAgents/upper/node_modules/rollup/dist/es/shared/node-entry.js:5641:38)
+    at FunctionBodyScope.findVariable (file:///D:/Dev/FreeAgents/upper/node_modules/rollup/dist/es/shared/node-entry.js:5641:38)

@@ -4,7 +4,7 @@ import type { Product, ProductCategory } from '../data/products';
 import { products as localProducts } from '../data/products';
 import type { CustomCombo } from '../data/combos';
 
-const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'https://upper-backend-production.up.railway.app/api/v1';
+const API_BASE_URL = '/api';
 
 // Cache para categorías
 let serviceCategoriesCache: any[] = [];

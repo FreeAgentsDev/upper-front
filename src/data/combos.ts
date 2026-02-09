@@ -9,6 +9,12 @@ export interface CustomCombo {
   createdAt: number;
 }
 
+// Interfaz extendida para combos que incluye tanto campos de Service como de CustomCombo
+export interface ComboService extends Service {
+  services: string[]; // IDs de los servicios que componen el combo
+  createdAt: number;
+}
+
 // Almacenar combos personalizados en localStorage
 export const COMBO_STORAGE_KEY = 'upper-custom-combos';
 
@@ -38,7 +44,7 @@ export function deleteCustomCombo(comboId: string): void {
 }
 
 // Adiciones al servicio (Combos)
-export const comboServices: Service[] = [
+export const comboServices: ComboService[] = [
   {
     id: 'corte-barba',
     name: 'Corte + Barba',
@@ -52,6 +58,8 @@ export const comboServices: Service[] = [
       'Diseño de barba profesional',
       'Productos premium incluidos',
     ],
+    services: ['corte-cabello', 'diseno-barba'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-cejas',
@@ -66,6 +74,8 @@ export const comboServices: Service[] = [
       'Cejas de precisión',
       'Asesoría de estilo',
     ],
+    services: ['corte-cabello', 'cejas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-afeitado',
@@ -80,6 +90,8 @@ export const comboServices: Service[] = [
       'Afeitado al ras',
       'Productos calmantes incluidos',
     ],
+    services: ['corte-cabello', 'afeitado-barba'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-lineas',
@@ -94,6 +106,8 @@ export const comboServices: Service[] = [
       'Diseños y líneas creativas',
       'Acabado profesional',
     ],
+    services: ['corte-cabello', 'lineas'],
+    createdAt: Date.now(),
   },
   {
     id: 'barba-afeitado',
@@ -108,6 +122,8 @@ export const comboServices: Service[] = [
       'Afeitado de precisión',
       'Hidratación profunda',
     ],
+    services: ['diseno-barba', 'afeitado-barba'],
+    createdAt: Date.now(),
   },
   {
     id: 'barba-cejas',
@@ -122,6 +138,8 @@ export const comboServices: Service[] = [
       'Cejas de precisión',
       'Productos calmantes',
     ],
+    services: ['diseno-barba', 'cejas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-barba-pequena',
@@ -136,6 +154,8 @@ export const comboServices: Service[] = [
       'Diseño de barba pequeña',
       'Productos incluidos',
     ],
+    services: ['corte-cabello', 'diseno-barba-pequena'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-barba-cejas',
@@ -151,6 +171,8 @@ export const comboServices: Service[] = [
       'Cejas de precisión',
       'Productos premium',
     ],
+    services: ['corte-cabello', 'diseno-barba', 'cejas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-barba-lineas',
@@ -166,6 +188,8 @@ export const comboServices: Service[] = [
       'Líneas y diseños',
       'Acabado profesional',
     ],
+    services: ['corte-cabello', 'diseno-barba', 'lineas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-afeitado-cejas',
@@ -181,6 +205,8 @@ export const comboServices: Service[] = [
       'Cejas de precisión',
       'Productos calmantes',
     ],
+    services: ['corte-cabello', 'afeitado-barba', 'cejas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-afeitado-lineas',
@@ -196,6 +222,8 @@ export const comboServices: Service[] = [
       'Líneas y diseños',
       'Acabado profesional',
     ],
+    services: ['corte-cabello', 'afeitado-barba', 'lineas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-cejas-lineas',
@@ -211,6 +239,8 @@ export const comboServices: Service[] = [
       'Líneas y diseños',
       'Productos incluidos',
     ],
+    services: ['corte-cabello', 'cejas', 'lineas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-barba-cejas-lineas',
@@ -227,6 +257,8 @@ export const comboServices: Service[] = [
       'Líneas y diseños',
       'Productos premium',
     ],
+    services: ['corte-cabello', 'diseno-barba', 'cejas', 'lineas'],
+    createdAt: Date.now(),
   },
   {
     id: 'corte-afeitado-lineas-cejas',
@@ -243,6 +275,8 @@ export const comboServices: Service[] = [
       'Cejas de precisión',
       'Productos calmantes',
     ],
+    services: ['corte-cabello', 'afeitado-barba', 'lineas', 'cejas'],
+    createdAt: Date.now(),
   },
 ];
 

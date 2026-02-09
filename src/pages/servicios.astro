@@ -2,8 +2,31 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { principalServices, sinCitaServices } from '../data/services';
-import { comboServices } from '../data/combos';
+import { principalServices as staticPrincipal, sinCitaServices as staticSinCita, services as allStaticServices } from '../data/services';
+import { comboServices as staticCombos } from '../data/combos';
+import { apiService } from '../services/api';
+
+// Intentar obtener servicios desde la API
+let services = [];
+try {
+	services = await apiService.getServices();
+} catch (error) {
+	console.error('Error fetching services from API:', error);
+	services = allStaticServices;
+}
+
+// Filtrar por categorías (asegurando fallbacks si la API devuelve poco o nada)
+const principalServices = services.filter(s => s.category === 'principal').length > 0 
+	? services.filter(s => s.category === 'principal') 
+	: staticPrincipal;
+
+const comboServices = services.filter(s => s.category === 'combo').length > 0 
+	? services.filter(s => s.category === 'combo') 
+	: staticCombos;
+
+const sinCitaServices = services.filter(s => s.category === 'sin-cita').length > 0 
+	? services.filter(s => s.category === 'sin-cita') 
+	: staticSinCita;
 ---
 
 <Layout title="Servicios Upper Barber Cuts" description="Conoce todos los servicios de barbería, barba, cejas y combos signature de Upper Barber Cuts.">
@@ -78,7 +101,7 @@ import { comboServices } from '../data/combos';
 							<div class="absolute inset-0 bg-gradient-to-r from-brand-ink/25 via-transparent to-transparent md:from-brand-ink/15 md:to-transparent"></div>
 							<div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-brand-ink/85 via-brand-ink/40 to-transparent md:hidden"></div>
 							<script>
-								const localVideo = document.getElementById('upper-local-video');
+								const localVideo = document.getElementById('upper-local-video') as HTMLVideoElement;
 								if (localVideo) {
 									localVideo.muted = true;
 									localVideo.loop = true;
@@ -428,7 +451,7 @@ import { comboServices } from '../data/combos';
 									</div>
 									<button
 										type="button"
-										onclick="deleteCombo('${combo.id}')"
+										onclick="window.deleteCombo('${combo.id}')"
 										class="flex-shrink-0 text-brand-light/30 hover:text-brand-amber transition p-1"
 										aria-label="Eliminar combo"
 									>
@@ -465,7 +488,7 @@ import { comboServices } from '../data/combos';
 			}
 		});
 
-		function deleteCombo(comboId) {
+		window.deleteCombo = function(comboId) {
 			if (!confirm('¿Estás seguro de que quieres eliminar este combo?')) return;
 			const stored = localStorage.getItem('upper-custom-combos');
 			if (!stored) return;

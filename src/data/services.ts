@@ -49,10 +49,10 @@ export const principalServices: Service[] = [
   },
 ];
 
-import { comboServices } from './combos';
+// import { comboServices } from './combos';
 
-// Adiciones al servicio (Combos)
-export { comboServices };
+//  Adiciones al servicio (Combos)
+// export { comboServices };
 
 // Servicios sin cita
 export const sinCitaServices: Service[] = [
@@ -145,6 +145,5 @@ export const sinCitaServices: Service[] = [
 // Todos los servicios combinados
 export const services: Service[] = [
   ...principalServices,
-  ...comboServices,
   ...sinCitaServices,
 ];

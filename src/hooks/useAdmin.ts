@@ -3,11 +3,7 @@ import type { Service } from '../data/services';
 import type { Product } from '../data/products';
 import type { CustomCombo } from '../data/combos';
 import { apiService } from '../services/api';
-
-// Datos locales para sincronización
-// import { principalServices, sinCitaServices } from '../data/services';
-// import { comboServices } from '../data/combos';
-// import { products as localProducts } from '../data/products';
+import { storageService } from '../services/storage';
 
 export function useAdmin() {
     const [services, setServices] = useState<Service[]>([]);
@@ -31,6 +27,11 @@ export function useAdmin() {
             setProducts(fetchedProducts);
             setCombos(fetchedCombos);
 
+            // Sincronizar con localStorage para que la landing page tenga los datos
+            storageService.saveServices(fetchedServices);
+            storageService.saveProducts(fetchedProducts);
+            storageService.saveCombos(fetchedCombos);
+
         } catch (err: any) {
             console.error('Error cargando datos de la API:', err);
             setError(err.message || 'Error al conectar con el servidor');
@@ -49,7 +50,11 @@ export function useAdmin() {
     const addService = async (newService: Service) => {
         try {
             const created = await apiService.createService(newService);
-            setServices(prev => [...prev, created]);
+            setServices(prev => {
+                const updated = [...prev, created];
+                storageService.saveServices(updated);
+                return updated;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -58,7 +63,11 @@ export function useAdmin() {
     const updateService = async (updatedService: Service) => {
         try {
             const updated = await apiService.updateService(updatedService.id, updatedService);
-            setServices(prev => prev.map(s => s.id === updated.id ? updated : s));
+            setServices(prev => {
+                const newServices = prev.map(s => s.id === updated.id ? updated : s);
+                storageService.saveServices(newServices);
+                return newServices;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -68,7 +77,11 @@ export function useAdmin() {
         if (!confirm('¿Estás seguro de eliminar este servicio?')) return;
         try {
             await apiService.deleteService(id);
-            setServices(prev => prev.filter(s => s.id !== id));
+            setServices(prev => {
+                const updated = prev.filter(s => s.id !== id);
+                storageService.saveServices(updated);
+                return updated;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -78,7 +91,11 @@ export function useAdmin() {
     const addProduct = async (newProduct: Product) => {
         try {
             const created = await apiService.createProduct(newProduct);
-            setProducts(prev => [...prev, created]);
+            setProducts(prev => {
+                const updated = [...prev, created];
+                storageService.saveProducts(updated);
+                return updated;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -87,7 +104,11 @@ export function useAdmin() {
     const updateProduct = async (updatedProduct: Product) => {
         try {
             const updated = await apiService.updateProduct(updatedProduct.id, updatedProduct);
-            setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
+            setProducts(prev => {
+                const newProducts = prev.map(p => p.id === updated.id ? updated : p);
+                storageService.saveProducts(newProducts);
+                return newProducts;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -97,7 +118,11 @@ export function useAdmin() {
         if (!confirm('¿Estás seguro de eliminar este producto?')) return;
         try {
             await apiService.deleteProduct(id);
-            setProducts(prev => prev.filter(p => p.id !== id));
+            setProducts(prev => {
+                const updated = prev.filter(p => p.id !== id);
+                storageService.saveProducts(updated);
+                return updated;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -107,7 +132,11 @@ export function useAdmin() {
     const addCombo = async (newCombo: CustomCombo) => {
         try {
             const created = await apiService.createCombo(newCombo);
-            setCombos(prev => [...prev, created]);
+            setCombos(prev => {
+                const updated = [...prev, created];
+                storageService.saveCombos(updated);
+                return updated;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -116,7 +145,11 @@ export function useAdmin() {
     const updateCombo = async (updatedCombo: CustomCombo) => {
         try {
             const updated = await apiService.updateCombo(updatedCombo);
-            setCombos(prev => prev.map(c => c.id === updatedCombo.id ? updated : c));
+            setCombos(prev => {
+                const newCombos = prev.map(c => c.id === updatedCombo.id ? updated : c);
+                storageService.saveCombos(newCombos);
+                return newCombos;
+            });
         } catch (err: any) {
             setError(err.message);
         }
@@ -126,7 +159,11 @@ export function useAdmin() {
         if (!confirm('¿Estás seguro de eliminar este combo?')) return;
         try {
             await apiService.deleteCombo(id);
-            setCombos(prev => prev.filter(c => c.id !== id));
+            setCombos(prev => {
+                const updated = prev.filter(c => c.id !== id);
+                storageService.saveCombos(updated);
+                return updated;
+            });
         } catch (err: any) {
             setError(err.message);
         }

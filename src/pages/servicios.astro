@@ -2,34 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { principalServices as staticPrincipal, sinCitaServices as staticSinCita, services as allStaticServices } from '../data/services';
-import { comboServices as staticCombos } from '../data/combos';
-import { apiService } from '../services/api';
-
-// Intentar obtener servicios desde la API
-let services = [];
-try {
-	services = await apiService.getServices();
-} catch (error) {
-	console.error('Error fetching services from API:', error);
-	services = allStaticServices;
-}
-
-// Filtrar por categorías (asegurando fallbacks si la API devuelve poco o nada)
-const principalServices = services.filter(s => s.category === 'principal').length > 0 
-	? services.filter(s => s.category === 'principal') 
-	: staticPrincipal;
-
-const comboServices = services.filter(s => s.category === 'combo').length > 0 
-	? services.filter(s => s.category === 'combo') 
-	: staticCombos;
-
-const sinCitaServices = services.filter(s => s.category === 'sin-cita').length > 0 
-	? services.filter(s => s.category === 'sin-cita') 
-	: staticSinCita;
+import DynamicServicesByCategory from '../components/services/DynamicServicesByCategory';
+import DataInitializer from '../components/home/DataInitializer';
 ---
 
 <Layout title="Servicios Upper Barber Cuts" description="Conoce todos los servicios de barbería, barba, cejas y combos signature de Upper Barber Cuts.">
+	<DataInitializer client:only="react" />
 	<Header />
 	<main class="bg-brand-ink">
 		<!-- Hero Section Mejorado -->
@@ -159,258 +137,109 @@ const sinCitaServices = services.filter(s => s.category === 'sin-cita').length >
 					</p>
 				</div>
 			</div>
+
 			<div class="relative mx-auto max-w-7xl px-4 sm:px-6">
-				<!-- Servicios Principales - Grid Horizontal -->
-				<div class="mb-10 sm:mb-12 lg:mb-16">
+				<!-- Servicios Principales -->
+				<div class="mb-12">
 					<div class="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4">
 						<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/40 to-brand-amber/40"></div>
 						<h3 class="text-base sm:text-lg lg:text-xl font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber whitespace-nowrap px-2">Servicios Principales</h3>
 						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/40 to-brand-amber/40"></div>
 					</div>
-					<div class="grid gap-6 sm:gap-8 lg:grid-cols-2">
-						{principalServices.map((service, index) => {
-							const serviceImage = service.id === 'corte-cabello' 
-								? '/media/servicios/cortes-que-ensen-an-ma-s-que-estilo-20250704-120536-0000.webp'
-								: '/media/servicios/esto-es-lo-que-realmente-le-hace-a-tu-barba-20250415-160242-0005.webp';
-							return (
-								<article class="group card-enhanced relative overflow-hidden rounded-2xl sm:rounded-[32px] p-1.5 sm:p-2 animate-slide-up" style={`animation-delay: ${index * 0.1}s;`}>
-									<div class="grid gap-0 overflow-hidden rounded-xl sm:rounded-[26px] md:grid-cols-[240px_1fr]">
-										<div class="relative h-40 sm:h-48 overflow-hidden md:h-auto md:min-h-[280px]">
-											<img
-												src={serviceImage}
-												alt={service.name}
-												loading="lazy"
-												class="h-full w-full object-cover image-hover-effect"
-											/>
-											<div class="absolute inset-0 bg-gradient-to-r from-brand-ink/70 via-brand-ink/30 to-transparent md:from-brand-ink/50 md:via-transparent"></div>
-											<div class="absolute top-3 left-3 sm:top-4 sm:left-4">
-												<div class="rounded-full border-2 border-brand-amber/60 bg-brand-amber/20 px-2 py-1 sm:px-3 sm:py-1.5 backdrop-blur">
-													<p class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-brand-amber">
-														{service.duration}
-													</p>
-												</div>
-											</div>
-										</div>
-										<div class="flex flex-col justify-between bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-4 sm:p-5 lg:p-6">
-											<div>
-												<div class="mb-2 sm:mb-3 flex items-start justify-between gap-2 sm:gap-3">
-													<h3 class="text-lg sm:text-xl lg:text-2xl font-black uppercase text-brand-light leading-tight">{service.name}</h3>
-													<div class="flex-shrink-0">
-														<div class="rounded-full border-2 border-brand-amber bg-brand-amber/20 px-4 py-1.5 backdrop-blur shadow-lg shadow-brand-amber/30">
-															<p class="text-xs font-black uppercase tracking-[0.15em] text-brand-amber">
-																{service.price}
-															</p>
-														</div>
-													</div>
-												</div>
-												<p class="mb-4 text-sm leading-relaxed text-brand-light/80">
-													{service.summary}
-												</p>
-												<ul class="space-y-2.5 text-xs text-brand-light/90">
-													{service.features.map((feature) => (
-														<li class="flex items-start gap-2.5">
-															<div class="mt-1 flex-shrink-0">
-																<div class="flex h-5 w-5 items-center justify-center rounded-full bg-brand-amber/30 border border-brand-amber/60">
-																	<svg class="h-3 w-3 text-brand-amber" fill="currentColor" viewBox="0 0 20 20">
-																		<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-																	</svg>
-																</div>
-															</div>
-															<span class="leading-relaxed">{feature}</span>
-														</li>
-													))}
-												</ul>
-											</div>
-											<a
-												href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20${encodeURIComponent(service.name)}.`}
-												target="_blank"
-												rel="noreferrer"
-												class="group/btn btn-premium relative mt-6 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-5 py-3 text-[11px] font-bold uppercase tracking-[0.25em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_25px_rgba(247,148,31,0.8)]"
-											>
-												<span class="relative z-10">Reservar</span>
-												<svg class="relative z-10 h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-												</svg>
-												<div class="absolute inset-0 bg-gradient-to-r from-brand-amber via-amber-400 to-brand-amber opacity-0 transition-opacity duration-300 group-hover/btn:opacity-100"></div>
-											</a>
-										</div>
-									</div>
-								</article>
-							);
-						})}
+					<div>
+						<DynamicServicesByCategory client:load category="principal" categoryLabel="Servicios Principales" gridCols="lg:grid-cols-2" />
 					</div>
 				</div>
 
-				<!-- Combos y Adiciones - Grid Compacto -->
+				<!-- Combos y Adiciones -->
 				<div class="mb-12">
-					<div class="mb-4 flex items-center justify-between">
-						<div class="flex items-center gap-3 flex-1">
-							<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
-							<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Combos y Adiciones</h3>
-							<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
-						</div>
-						<a
-							href="/tienda"
-							class="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-brand-amber/60 bg-brand-amber/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-brand-amber backdrop-blur transition hover:bg-brand-amber/20"
-						>
-							<span>Crear Combo</span>
-							<svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-							</svg>
-						</a>
+					<div class="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4">
+						<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/40 to-brand-amber/40"></div>
+						<h3 class="text-base sm:text-lg lg:text-xl font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber whitespace-nowrap px-2">Combos y Adiciones</h3>
+						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/40 to-brand-amber/40"></div>
 					</div>
-					<div class="mb-4 text-center sm:hidden">
-						<a
-							href="/tienda"
-							class="inline-flex items-center gap-2 text-xs font-semibold text-brand-amber hover:text-brand-amber/80 transition"
-						>
-							<span>¿Quieres crear tu propio combo?</span>
-							<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-							</svg>
-						</a>
-					</div>
-					<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-						{comboServices.map((service, index) => (
-							<article class="group card-enhanced relative overflow-hidden rounded-[24px] p-2 animate-slide-up" style={`animation-delay: ${index * 0.05}s;`}>
-								<div class="rounded-[18px] bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-5">
-									<div class="mb-3 flex items-start justify-between gap-2">
-										<h3 class="text-base font-black uppercase leading-tight text-brand-light flex-1">{service.name}</h3>
-										<div class="flex-shrink-0 rounded-full border-2 border-brand-amber bg-brand-amber/20 px-2.5 py-1 backdrop-blur">
-											<p class="text-[10px] font-bold uppercase tracking-[0.15em] text-brand-amber">
-												{service.price}
-											</p>
-										</div>
-									</div>
-									<p class="mb-3 text-xs leading-relaxed text-brand-light/70 line-clamp-2">{service.summary}</p>
-									<ul class="mb-4 space-y-1.5 text-[11px] text-brand-light/80">
-										{service.features.slice(0, 2).map((feature) => (
-											<li class="flex items-start gap-1.5">
-												<svg class="mt-0.5 h-2.5 w-2.5 flex-shrink-0 text-brand-amber" fill="currentColor" viewBox="0 0 20 20">
-													<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-												</svg>
-												<span class="line-clamp-1">{feature}</span>
-											</li>
-										))}
-									</ul>
-										<a
-											href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20reservar%20${encodeURIComponent(service.name)}.`}
-											target="_blank"
-											rel="noreferrer"
-											class="group/btn btn-premium relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full border-2 border-brand-amber bg-brand-amber px-3 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-brand-ink shadow-lg shadow-brand-amber/50 transition-all duration-200 hover:scale-110 hover:shadow-[0_0_18px_rgba(247,148,31,0.8)]"
-										>
-										<span class="relative z-10">Reservar</span>
-										<svg class="relative z-10 h-2.5 w-2.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-										</svg>
-									</a>
-								</div>
-							</article>
-						))}
+					<div>
+						<DynamicServicesByCategory client:load category="combo" categoryLabel="Combos y Adiciones" gridCols="lg:grid-cols-2" />
 					</div>
 				</div>
 
-				<!-- Combos Personalizados y Servicios Sin Cita - Layout Horizontal -->
-				<div class="grid gap-8 lg:grid-cols-[1fr_400px]">
-					<div class="space-y-8">
-						<!-- Combos Personalizados -->
-						<div id="combos-personalizados">
-							<div class="mb-4 flex items-center gap-3">
-								<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
-								<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Tus Combos Personalizados</h3>
-								<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
-							</div>
-							<div id="custom-combos-container" class="grid gap-4 sm:grid-cols-2">
-								<!-- Los combos personalizados se cargarán aquí con JavaScript -->
-							</div>
-							<p id="no-combos-message" class="text-center text-xs text-brand-light/50 hidden py-4">
-								No tienes combos personalizados aún. <a href="/tienda" class="text-brand-amber hover:underline">Crea uno en la tienda</a>
-							</p>
-						</div>
-
-						<!-- Servicios Sin Cita -->
-						<div>
-							<div class="mb-4 flex items-center gap-3">
-								<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/30 to-brand-amber/30"></div>
-								<h3 class="text-lg font-bold uppercase tracking-[0.2em] text-brand-amber">Servicios Sin Cita</h3>
-								<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/30 to-brand-amber/30"></div>
-							</div>
-							<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-								{sinCitaServices.map((service, index) => (
-									<article class="group card-enhanced relative overflow-hidden rounded-2xl p-2 animate-slide-up" style={`animation-delay: ${index * 0.05}s;`}>
-										<div class="rounded-[14px] bg-gradient-to-br from-brand-ink/95 to-brand-night/95 p-4">
-											<div class="mb-2.5 flex items-start justify-between gap-2">
-												<h3 class="text-sm font-bold uppercase leading-tight text-brand-light flex-1">{service.name}</h3>
-												<div class="flex-shrink-0 rounded-full border border-brand-amber/60 bg-brand-amber/10 px-2 py-0.5 backdrop-blur">
-													<p class="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-amber">
-														{service.price}
-													</p>
-												</div>
-											</div>
-											<p class="mb-3 text-[11px] leading-relaxed text-brand-light/70 line-clamp-2">{service.summary}</p>
-											<a
-												href={`https://wa.me/573000000000?text=Hola%20Upper,%20quiero%20el%20servicio%20${encodeURIComponent(service.name)}%20sin%20cita.`}
-												target="_blank"
-												rel="noreferrer"
-												class="group/btn btn-premium relative inline-flex w-full items-center justify-center gap-1.5 overflow-hidden rounded-full border border-brand-amber/60 bg-brand-amber/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-brand-amber backdrop-blur transition-all duration-200 hover:bg-brand-amber hover:text-brand-ink hover:scale-105"
-											>
-												<span class="relative z-10">Reservar</span>
-											</a>
-										</div>
-									</article>
-								))}
-							</div>
-						</div>
+				<!-- Combos Personalizados -->
+				<div class="mb-12" id="combos-personalizados">
+					<div class="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4">
+						<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/40 to-brand-amber/40"></div>
+						<h3 class="text-base sm:text-lg lg:text-xl font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber whitespace-nowrap px-2">Tus Combos Personalizados</h3>
+						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/40 to-brand-amber/40"></div>
 					</div>
-					<aside class="sticky top-6 h-max">
-					<div class="rounded-[24px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/90 to-brand-night/90 p-6 shadow-xl backdrop-blur-xl">
-						<div class="mb-6">
-							<div class="inline-flex items-center gap-2 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-4 py-2 backdrop-blur">
-								<span class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber">Garantía Upper</span>
-							</div>
-							<h3 class="mt-4 text-xl font-bold text-brand-light">100% Satisfacción o tu dinero de vuelta</h3>
-							<p class="mt-4 text-sm leading-relaxed text-brand-light/75">
-						Si no quedas satisfecho con tu servicio, no pagas. Ajustamos tu estilo hasta que te sientas 100% seguro.
+					<div id="custom-combos-container" class="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+						<!-- Los combos personalizados se cargarán aquí con JavaScript -->
+					</div>
+					<p id="no-combos-message" class="text-center text-xs text-brand-light/50 hidden py-6">
+						No tienes combos personalizados aún. <a href="/tienda" class="text-brand-amber hover:underline">Crea uno en la tienda</a>
 					</p>
-						</div>
-						<div class="space-y-6 border-t border-brand-stone/40 pt-6">
+				</div>
+
+				<!-- Servicios Sin Cita -->
+				<div class="mt-12">
+					<div class="mb-6 sm:mb-8 flex items-center gap-3 sm:gap-4">
+						<div class="h-px flex-1 bg-gradient-to-r from-transparent via-brand-amber/40 to-brand-amber/40"></div>
+						<h3 class="text-base sm:text-lg lg:text-xl font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-brand-amber whitespace-nowrap px-2">Servicios Sin Cita</h3>
+						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/40 to-brand-amber/40"></div>
+					</div>
+					<div class="grid gap-8 lg:grid-cols-[1fr_400px]">
 						<div>
-								<p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber/90">Incluye en todos los servicios</p>
-								<ul class="mt-4 space-y-3 text-sm text-brand-light/75">
-									<li class="flex items-start gap-3">
-										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
-										<span>Playlist personalizada</span>
-									</li>
-									<li class="flex items-start gap-3">
-										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
-										<span>Recomendación de productos</span>
-									</li>
-									<li class="flex items-start gap-3">
-										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
-										<span>Seguimiento post-servicio</span>
-									</li>
-								</ul>
-							</div>
-							<div class="space-y-3 border-t border-brand-stone/40 pt-6">
-								<p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber/90">Tips antes de tu cita</p>
-								<ul class="space-y-3 text-sm text-brand-light/75">
-									<li class="flex items-start gap-3">
-										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
-										<span>Llega 10 minutos antes para briefing inicial.</span>
-									</li>
-									<li class="flex items-start gap-3">
-										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
-										<span>Trae referencias visuales si quieres un cambio radical.</span>
-									</li>
-									<li class="flex items-start gap-3">
-										<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
-										<span>Pregunta por el plan de fidelidad Upper Members.</span>
-									</li>
-							</ul>
+							<DynamicServicesByCategory client:load category="sin-cita" categoryLabel="Servicios Sin Cita" gridCols="lg:grid-cols-2" />
 						</div>
+						<aside class="sticky top-6 h-max">
+							<div class="rounded-[24px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/90 to-brand-night/90 p-6 shadow-xl backdrop-blur-xl">
+								<div class="mb-6">
+									<div class="inline-flex items-center gap-2 rounded-full border border-brand-amber/30 bg-brand-amber/10 px-4 py-2 backdrop-blur">
+										<span class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber">Garantía Upper</span>
+									</div>
+									<h3 class="mt-4 text-xl font-bold text-brand-light">100% Satisfacción o tu dinero de vuelta</h3>
+									<p class="mt-4 text-sm leading-relaxed text-brand-light/75">
+										Si no quedas satisfecho con tu servicio, no pagas. Ajustamos tu estilo hasta que te sientas 100% seguro.
+									</p>
+								</div>
+								<div class="space-y-6 border-t border-brand-stone/40 pt-6">
+									<div>
+										<p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber/90">Incluye en todos los servicios</p>
+										<ul class="mt-4 space-y-3 text-sm text-brand-light/75">
+											<li class="flex items-start gap-3">
+												<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+												<span>Playlist personalizada</span>
+											</li>
+											<li class="flex items-start gap-3">
+												<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+												<span>Recomendación de productos</span>
+											</li>
+											<li class="flex items-start gap-3">
+												<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+												<span>Seguimiento post-servicio</span>
+											</li>
+										</ul>
+									</div>
+									<div class="space-y-3 border-t border-brand-stone/40 pt-6">
+										<p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-amber/90">Tips antes de tu cita</p>
+										<ul class="space-y-3 text-sm text-brand-light/75">
+											<li class="flex items-start gap-3">
+												<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+												<span>Llega 10 minutos antes para briefing inicial.</span>
+											</li>
+											<li class="flex items-start gap-3">
+												<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+												<span>Trae referencias visuales si quieres un cambio radical.</span>
+											</li>
+											<li class="flex items-start gap-3">
+												<span class="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-amber"></span>
+												<span>Pregunta por el plan de fidelidad Upper Members.</span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</aside>
 					</div>
-					</div>
-				</aside>
+				</div>
 			</div>
 		</section>
 	</main>

@@ -234,7 +234,7 @@ export default function StoreFront({ products }: StoreFrontProps) {
       </div>
 
       {/* Grid de productos (Ahora ocupa todo el ancho) */}
-      <div className="grid gap-5 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-5 sm:gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {filteredProducts.map((product) => (
 
 

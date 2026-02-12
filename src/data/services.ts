@@ -7,6 +7,7 @@ export interface Service {
   priceNumber: number;
   features: string[];
   category: 'principal' | 'combo' | 'sin-cita';
+  image?: string;
 }
 
 export interface ServiceCombo {
@@ -27,6 +28,7 @@ export const principalServices: Service[] = [
     price: '$22.000',
     priceNumber: 22000,
     category: 'principal',
+    image: '/media/servicios/cortes-que-ensen-an-ma-s-que-estilo-20250704-120536-0000.jpg',
     features: [
       'Diagnóstico de rostro y estilo',
       'Corte con máquina y tijera',
@@ -41,6 +43,7 @@ export const principalServices: Service[] = [
     price: '$22.000',
     priceNumber: 22000,
     category: 'principal',
+    image: '/media/servicios/esto-es-lo-que-realmente-le-hace-a-tu-barba-20250415-160242-0005.jpg',
     features: [
       'Acondicionamiento con toalla caliente',
       'Perfilado con navaja de precisión',

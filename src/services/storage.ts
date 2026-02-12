@@ -34,9 +34,21 @@ const saveItems = <T>(key: string, items: T[]): void => {
     }
 };
 
+// Merge servicios almacenados con datos iniciales para preservar propiedades como 'image'
+const mergeServicesWithInitial = (storedServices: Service[], initialServices: Service[]): Service[] => {
+    const initialMap = new Map(initialServices.map(s => [s.id, s]));
+    return storedServices.map(stored => ({
+        ...initialMap.get(stored.id),
+        ...stored,
+    }));
+};
+
 // Servicios
 export const storageService = {
-    getServices: (initial: Service[]) => getItems<Service>(KEYS.SERVICES, initial),
+    getServices: (initial: Service[]) => {
+        const stored = getItems<Service>(KEYS.SERVICES, initial);
+        return stored.length > 0 ? mergeServicesWithInitial(stored, initial) : initial;
+    },
     saveServices: (items: Service[]) => saveItems(KEYS.SERVICES, items),
 
     getProducts: (initial: Product[]) => getItems<Product>(KEYS.PRODUCTS, initial),

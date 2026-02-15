@@ -149,7 +149,7 @@ const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/40 to-brand-amber/40"></div>
 					</div>
 					<div>
-						<DynamicServicesByCategory client:load category="principal" categoryLabel="Servicios Principales" gridCols="lg:grid-cols-2" />
+						<DynamicServicesByCategory client:visible category="principal" categoryLabel="Servicios Principales" gridCols="lg:grid-cols-2" />
 					</div>
 				</div>
 
@@ -161,7 +161,7 @@ const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 						<div class="h-px flex-1 bg-gradient-to-l from-transparent via-brand-amber/40 to-brand-amber/40"></div>
 					</div>
 					<div>
-						<DynamicServicesByCategory client:load category="combo" categoryLabel="Combos y Adiciones" gridCols="lg:grid-cols-2" />
+						<DynamicServicesByCategory client:visible category="combo" categoryLabel="Combos y Adiciones" gridCols="lg:grid-cols-2" />
 					</div>
 				</div>
 
@@ -189,7 +189,7 @@ const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 					</div>
 					<div class="grid gap-8 lg:grid-cols-[1fr_400px]">
 						<div>
-							<DynamicServicesByCategory client:load category="sin-cita" categoryLabel="Servicios Sin Cita" gridCols="lg:grid-cols-2" />
+							<DynamicServicesByCategory client:visible category="sin-cita" categoryLabel="Servicios Sin Cita" gridCols="lg:grid-cols-2" />
 						</div>
 						<aside class="sticky top-6 h-max">
 							<div class="rounded-[24px] border-2 border-brand-stone/60 bg-gradient-to-br from-brand-ink/90 to-brand-night/90 p-6 shadow-xl backdrop-blur-xl">

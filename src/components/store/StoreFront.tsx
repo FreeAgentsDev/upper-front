@@ -384,7 +384,7 @@ export default function StoreFront({ products }: StoreFrontProps) {
               cart.map((item) => (
                 <div key={item.id} className="flex gap-4 p-3 rounded-xl border border-brand-stone/40 bg-brand-ink/40">
                   {item.image && (
-                    <img src={item.image} alt="" className="h-16 w-16 rounded-lg object-cover bg-brand-stone/20" />
+                    <img src={item.image} alt={item.name} className="h-16 w-16 rounded-lg object-cover bg-brand-stone/20" />
                   )}
                   <div className="flex-1 min-w-0">
                     <h4 className="font-bold text-brand-light truncate">{item.name}</h4>

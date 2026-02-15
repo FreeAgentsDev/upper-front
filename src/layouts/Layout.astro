@@ -3,6 +3,8 @@ import '../styles/global.css';
 
 const { title = 'Upper Barber Cuts', description = 'Barbería y tienda de cuidado masculino en Manizales.' } = Astro.props;
 const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
+const siteUrl = 'https://upperbarbercuts.com';
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -10,16 +12,30 @@ const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<!-- Favicons - Prioridad al logo PNG -->
+		<!-- Favicons -->
 		<link rel="icon" type="image/png" sizes="32x32" href="/media/image.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/media/image.png" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/media/image.png" />
 		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="canonical" href={`${siteUrl}${currentPath}`} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<meta name="theme-color" content="#f7941f" />
+		<!-- Open Graph -->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={`${siteUrl}${currentPath}`} />
+		<meta property="og:image" content={`${siteUrl}/media/image.png`} />
+		<meta property="og:site_name" content="Upper Barber Cuts" />
+		<meta property="og:locale" content="es_CO" />
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={`${siteUrl}/media/image.png`} />
 	</head>
 	<body class="min-h-screen bg-brand-ink text-brand-light antialiased">
 		<slot />

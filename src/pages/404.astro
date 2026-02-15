@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Página no encontrada | Upper Barber Cuts" description="La página que buscas no existe.">
+	<Header />
+	<main class="bg-brand-ink">
+		<section class="min-h-[60vh] flex items-center justify-center px-4">
+			<div class="text-center max-w-lg">
+				<p class="text-8xl sm:text-9xl font-black text-brand-amber/20">404</p>
+				<h1 class="mt-4 text-2xl sm:text-3xl font-black text-brand-light uppercase tracking-wider">Página no encontrada</h1>
+				<p class="mt-4 text-sm sm:text-base text-brand-light/70 leading-relaxed">
+					La página que buscas no existe o fue movida. Vuelve al inicio para explorar nuestros servicios.
+				</p>
+				<div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+					<a
+						href="/"
+						class="rounded-full border-2 border-brand-amber bg-brand-amber px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brand-ink transition-all duration-300 hover:bg-transparent hover:text-brand-amber"
+					>
+						Volver al inicio
+					</a>
+					<a
+						href="/servicios"
+						class="rounded-full border-2 border-brand-amber/70 bg-brand-amber/10 px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brand-amber transition-all duration-300 hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
+					>
+						Ver servicios
+					</a>
+				</div>
+			</div>
+		</section>
+	</main>
+	<Footer />
+</Layout>

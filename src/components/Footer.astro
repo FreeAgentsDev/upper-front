@@ -1,3 +1,9 @@
+---
+const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
+const businessEmail = import.meta.env.PUBLIC_BUSINESS_EMAIL || 'hola@upperbarbercuts.com';
+const formattedPhone = whatsappNumber.replace(/^57(\d{3})(\d{3})(\d{4})$/, '+57 $1 $2 $3');
+---
+
 <footer class="relative border-t border-brand-stone/40 bg-gradient-to-b from-brand-night via-brand-night to-brand-ink overflow-hidden">
 	<!-- Efecto de fondo decorativo mejorado -->
 	<div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(247,148,31,0.05),transparent_50%)]"></div>
@@ -25,16 +31,16 @@
 			<ul class="mt-4 space-y-3 text-sm text-brand-light/80">
 				<li class="group flex items-center gap-2">
 					<span class="text-brand-amber/60">WhatsApp:</span>
-					<a class="text-brand-amber transition-all duration-300 hover:underline hover:text-brand-amber/80 hover:translate-x-1 inline-flex items-center gap-1" href="https://wa.me/573000000000" target="_blank" rel="noreferrer">
-						+57 300 000 0000
+					<a class="text-brand-amber transition-all duration-300 hover:underline hover:text-brand-amber/80 hover:translate-x-1 inline-flex items-center gap-1" href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer">
+						{formattedPhone}
 						<svg class="h-3 w-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
 						</svg>
 					</a>
 				</li>
 				<li>
-					<a class="group inline-flex items-center gap-1 text-brand-amber transition-all duration-300 hover:underline hover:text-brand-amber/80" href="mailto:hola@upperbarbercuts.com">
-						hola@upperbarbercuts.com
+					<a class="group inline-flex items-center gap-1 text-brand-amber transition-all duration-300 hover:underline hover:text-brand-amber/80" href={`mailto:${businessEmail}`}>
+						{businessEmail}
 						<svg class="h-3 w-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
 						</svg>

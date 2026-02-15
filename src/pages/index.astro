@@ -6,6 +6,9 @@ import DynamicServices from '../components/home/DynamicServices';
 import DynamicProducts from '../components/home/DynamicProducts';
 import DataInitializer from '../components/home/DataInitializer';
 import { testimonials } from '../data/testimonials';
+
+const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
+const formattedPhone = whatsappNumber.replace(/^57(\d{3})(\d{3})(\d{4})$/, '+57 $1 $2 $3');
 ---
 
 <Layout title="Upper Barber Cuts | Barbería y Tienda en Manizales" description="Cortes de precisión, diseño de barba y tienda de cuidado masculino con la experiencia Upper.">
@@ -55,7 +58,7 @@ import { testimonials } from '../data/testimonials';
 								</svg>
 							</a>
 						<a
-							href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20agendar%20una%20cita."
+							href={`https://wa.me/${whatsappNumber}?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20agendar%20una%20cita.`}
 							target="_blank"
 							rel="noreferrer"
 								class="group border-glow rounded-full border-2 border-brand-amber/70 bg-brand-amber/10 px-6 py-3 sm:px-8 sm:py-4 text-center text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] sm:tracking-[0.3em] text-brand-amber backdrop-blur-sm transition-all duration-300 hover:bg-brand-amber hover:text-brand-ink hover:scale-105 hover:border-brand-amber"
@@ -274,9 +277,9 @@ import { testimonials } from '../data/testimonials';
 							con toda la info que necesitas.
 						</p>
 						<div class="mt-6 space-y-3 text-sm text-brand-light/75">
-							<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://wa.me/573000000000" target="_blank" rel="noreferrer">
+							<a class="flex items-center gap-3 transition hover:text-brand-amber" href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer">
 								<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">WA</span>
-								<span>+57 300 000 0000</span>
+								<span>{formattedPhone}</span>
 							</a>
 							<a class="flex items-center gap-3 transition hover:text-brand-amber" href="https://www.instagram.com/upper_barber_cuts_manizales" target="_blank" rel="noreferrer">
 								<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-amber text-brand-amber">IG</span>

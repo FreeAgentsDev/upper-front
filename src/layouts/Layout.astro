@@ -2,6 +2,7 @@
 import '../styles/global.css';
 
 const { title = 'Upper Barber Cuts', description = 'Barbería y tienda de cuidado masculino en Manizales.' } = Astro.props;
+const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 ---
 
 <!doctype html>
@@ -25,7 +26,7 @@ const { title = 'Upper Barber Cuts', description = 'Barbería y tienda de cuidad
 		
 		<!-- Botón flotante de WhatsApp -->
 		<a
-			href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20me%20estoy%20interesado%20por%20tus%20servicios"
+			href={`https://wa.me/${whatsappNumber}?text=Hola%20Upper%20Barber%20Cuts,%20me%20estoy%20interesado%20por%20tus%20servicios`}
 			target="_blank"
 			rel="noreferrer"
 			class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25D366] shadow-2xl shadow-[#25D366]/50 transition-all hover:scale-110 hover:shadow-[#25D366]/70 active:scale-95"

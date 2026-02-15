@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+const whatsappNumber = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 ---
 
 <Layout title="Contacto Upper Barber Cuts" description="Agenda tu cita, escribe a WhatsApp Business o visita la barbería en Manizales.">
@@ -167,13 +169,10 @@ import Footer from '../components/Footer.astro';
 	<Footer />
 </Layout>
 
-<script is:inline>
+<script is:inline define:vars={{ whatsappNumber }}>
 	document.addEventListener('DOMContentLoaded', () => {
 		const form = document.getElementById('whatsapp-form');
 		const nombreInput = document.getElementById('nombre');
-		
-		// Número de WhatsApp (actualizar con el número real)
-		const whatsappNumber = '573000000000';
 		
 		if (!form || !nombreInput) return;
 		

@@ -26,6 +26,8 @@ pnpm-debug.log*
 # Google Drive credentials (NO SUBIR A GIT)
 credentials.json
 token.json
+Claude.md
+.claude/
 
 # Media files - Solo excluir archivos temporales y reportes
 # Las imágenes optimizadas SÍ se suben (están en public/media/)

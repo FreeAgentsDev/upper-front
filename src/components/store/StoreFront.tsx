@@ -3,7 +3,7 @@ import type { Product, ProductCategory } from '../../data/products';
 
 type CartItem = Product & { quantity: number };
 
-const WHATSAPP_NUMBER = '573000000000';
+const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000';
 const CART_STORAGE_KEY = 'upper-cart-storage';
 
 const currency = new Intl.NumberFormat('es-CO', {

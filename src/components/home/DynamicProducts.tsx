@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Product } from '../../data/products';
 import { products as initialProducts } from '../../data/products';
+import { apiService } from '../../services/api';
 import { storageService } from '../../services/storage';
 
 export default function DynamicProducts() {
@@ -8,15 +9,24 @@ export default function DynamicProducts() {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// Cargar productos desde localStorage o usar los iniciales
-		const loadedProducts = storageService.getProducts(initialProducts);
-		setProducts(loadedProducts.slice(0, 3)); // Primeros 3 para la landing
-		setLoading(false);
+		const loadData = async () => {
+			try {
+				const fetched = await apiService.getProducts();
+				const sliced = fetched.slice(0, 3);
+				setProducts(sliced);
+				storageService.saveProducts(fetched);
+			} catch {
+				const cached = storageService.getProducts(initialProducts);
+				setProducts(cached.slice(0, 3));
+			} finally {
+				setLoading(false);
+			}
+		};
+		loadData();
 
-		// Escuchar cambios en tiempo real desde el admin
 		const handleStorageUpdate = () => {
-			const updatedProducts = storageService.getProducts(initialProducts);
-			setProducts(updatedProducts.slice(0, 3));
+			const updated = storageService.getProducts(initialProducts);
+			setProducts(updated.slice(0, 3));
 		};
 
 		window.addEventListener('storage-update', handleStorageUpdate);
@@ -42,7 +52,7 @@ export default function DynamicProducts() {
 		<div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
 			{products.map((product, index) => {
 				const productImage = product.image || '';
-				
+
 				return (
 					<article key={product.id} className="group card-enhanced animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
 						{productImage && (

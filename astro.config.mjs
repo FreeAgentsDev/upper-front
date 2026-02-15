@@ -1,9 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { loadEnv } from 'vite';
 
 import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
+
+const { BACKEND_URL } = loadEnv(process.env.NODE_ENV ?? '', process.cwd(), '');
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,7 +15,7 @@ export default defineConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'https://upper-backend-production.up.railway.app',
+          target: BACKEND_URL || 'https://upper-backend-production.up.railway.app',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '/api/v1')
         }

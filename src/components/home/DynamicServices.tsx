@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Service } from '../../data/services';
 import { services as initialServices } from '../../data/services';
+import { apiService } from '../../services/api';
 import { storageService } from '../../services/storage';
 
 export default function DynamicServices() {
@@ -8,15 +9,24 @@ export default function DynamicServices() {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// Cargar servicios desde localStorage o usar los iniciales
-		const loadedServices = storageService.getServices(initialServices);
-		setServices(loadedServices.slice(0, 3)); // Primeros 3 para la landing
-		setLoading(false);
+		const loadData = async () => {
+			try {
+				const fetched = await apiService.getServices();
+				const nonCombos = fetched.filter(s => s.category !== 'combo');
+				setServices(nonCombos.slice(0, 3));
+				storageService.saveServices(fetched);
+			} catch {
+				const cached = storageService.getServices(initialServices);
+				setServices(cached.filter(s => s.category !== 'combo').slice(0, 3));
+			} finally {
+				setLoading(false);
+			}
+		};
+		loadData();
 
-		// Escuchar cambios en tiempo real desde el admin
 		const handleStorageUpdate = () => {
-			const updatedServices = storageService.getServices(initialServices);
-			setServices(updatedServices.slice(0, 3));
+			const updated = storageService.getServices(initialServices);
+			setServices(updated.filter(s => s.category !== 'combo').slice(0, 3));
 		};
 
 		window.addEventListener('storage-update', handleStorageUpdate);
@@ -28,13 +38,10 @@ export default function DynamicServices() {
 			<div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
 				{[1, 2, 3].map((i) => (
 					<div key={i} className="card-enhanced p-5 sm:p-6 lg:p-7 animate-pulse">
-						<div className="h-4 bg-brand-stone/30 rounded w-1/3 mb-4"></div>
-						<div className="h-8 bg-brand-stone/30 rounded w-2/3 mb-4"></div>
-						<div className="h-16 bg-brand-stone/30 rounded mb-4"></div>
-						<div className="space-y-2">
-							<div className="h-3 bg-brand-stone/30 rounded"></div>
-							<div className="h-3 bg-brand-stone/30 rounded"></div>
-						</div>
+						<div className="aspect-[4/3] bg-brand-stone/30 rounded mb-4"></div>
+						<div className="h-6 bg-brand-stone/30 rounded w-2/3 mb-3"></div>
+						<div className="h-12 bg-brand-stone/30 rounded mb-4"></div>
+						<div className="h-8 bg-brand-stone/30 rounded"></div>
 					</div>
 				))}
 			</div>
@@ -42,7 +49,7 @@ export default function DynamicServices() {
 	}
 
 	return (
-		<div className="mt-8 sm:mt-12 lg:mt-16 grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+		<div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
 			{services.map((service, index) => (
 				<article key={service.id} className="group card-enhanced animate-slide-up" style={{ animationDelay: `${index * 0.15}s` }}>
 					{index === 0 && (

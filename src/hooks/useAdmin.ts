@@ -7,6 +7,9 @@ import { products as initialProducts } from '../data/products';
 import { apiService } from '../services/api';
 import { storageService } from '../services/storage';
 
+// Verifica si un ID es numérico (viene del backend) o de texto (datos seed locales)
+const isBackendId = (id: string) => /^\d+$/.test(id);
+
 export function useAdmin() {
     const [services, setServices] = useState<Service[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
@@ -14,59 +17,37 @@ export function useAdmin() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Cargar datos al inicio - localStorage primero, API como fallback
+    // Cargar datos: API primero, localStorage como fallback
     const refreshData = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
-            // Primero intentar leer del localStorage (datos locales editados)
-            let storedServices = storageService.getServices(initialServices);
-            let storedProducts = storageService.getProducts(initialProducts);
-            let storedCombos = storageService.getCombos([]);
+            // Siempre intentar la API primero (fuente de verdad)
+            const [fetchedServices, fetchedProducts, fetchedCombos] = await Promise.all([
+                apiService.getServices(),
+                apiService.getProducts(),
+                apiService.getCombos()
+            ]);
 
-            // Si hay datos en localStorage, usarlos
-            if (storedServices.length > 0 || storedProducts.length > 0 || storedCombos.length > 0) {
-                setServices(storedServices);
-                setProducts(storedProducts);
-                setCombos(storedCombos);
-                setLoading(false);
-                return;
-            }
+            setServices(fetchedServices);
+            setProducts(fetchedProducts);
+            setCombos(fetchedCombos);
 
-            // Si no hay datos en localStorage, intentar obtener de la API
-            try {
-                const [fetchedServices, fetchedProducts, fetchedCombos] = await Promise.all([
-                    apiService.getServices(),
-                    apiService.getProducts(),
-                    apiService.getCombos()
-                ]);
+            // Actualizar cache en localStorage
+            storageService.saveServices(fetchedServices);
+            storageService.saveProducts(fetchedProducts);
+            storageService.saveCombos(fetchedCombos);
+        } catch (apiErr) {
+            console.error('API no disponible, usando cache local:', apiErr);
 
-                setServices(fetchedServices);
-                setProducts(fetchedProducts);
-                setCombos(fetchedCombos);
+            // Fallback: localStorage cache
+            const storedServices = storageService.getServices(initialServices);
+            const storedProducts = storageService.getProducts(initialProducts);
+            const storedCombos = storageService.getCombos([]);
 
-                // Guardar en localStorage para futuras cargas
-                storageService.saveServices(fetchedServices);
-                storageService.saveProducts(fetchedProducts);
-                storageService.saveCombos(fetchedCombos);
-            } catch (apiErr) {
-                // Si la API falla, usar los datos iniciales
-                console.error('API no disponible, usando datos iniciales:', apiErr);
-                setServices(initialServices);
-                setProducts(initialProducts);
-                setCombos([]);
-                storageService.saveServices(initialServices);
-                storageService.saveProducts(initialProducts);
-                storageService.saveCombos([]);
-            }
-
-        } catch (err: any) {
-            console.error('Error cargando datos:', err);
-            setError(err.message || 'Error al conectar con el servidor');
-            // Fallback a los datos iniciales
-            setServices(initialServices);
-            setProducts(initialProducts);
-            setCombos([]);
+            setServices(storedServices.length > 0 ? storedServices : initialServices);
+            setProducts(storedProducts.length > 0 ? storedProducts : initialProducts);
+            setCombos(storedCombos);
         } finally {
             setLoading(false);
         }
@@ -101,11 +82,13 @@ export function useAdmin() {
                 return newServices;
             });
 
-            // Intentar sincronizar con API (pero no es crítico si falla)
-            try {
-                await apiService.updateService(updatedService.id, updatedService);
-            } catch (apiErr) {
-                console.error('Error sincronizando con API, pero localStorage está actualizado:', apiErr);
+            // Sincronizar con API solo si el ID es numérico (existe en el backend)
+            if (isBackendId(updatedService.id)) {
+                try {
+                    await apiService.updateService(updatedService.id, updatedService);
+                } catch (apiErr) {
+                    console.error('Error sincronizando con API, pero localStorage está actualizado:', apiErr);
+                }
             }
         } catch (err: any) {
             setError(err.message);
@@ -115,7 +98,9 @@ export function useAdmin() {
     const deleteService = async (id: string) => {
         if (!confirm('¿Estás seguro de eliminar este servicio?')) return;
         try {
-            await apiService.deleteService(id);
+            if (isBackendId(id)) {
+                await apiService.deleteService(id);
+            }
             setServices(prev => {
                 const updated = prev.filter(s => s.id !== id);
                 storageService.saveServices(updated);
@@ -149,11 +134,13 @@ export function useAdmin() {
                 return newProducts;
             });
 
-            // Intentar sincronizar con API (pero no es crítico si falla)
-            try {
-                await apiService.updateProduct(updatedProduct.id, updatedProduct);
-            } catch (apiErr) {
-                console.error('Error sincronizando con API, pero localStorage está actualizado:', apiErr);
+            // Sincronizar con API solo si el ID es numérico (existe en el backend)
+            if (isBackendId(updatedProduct.id)) {
+                try {
+                    await apiService.updateProduct(updatedProduct.id, updatedProduct);
+                } catch (apiErr) {
+                    console.error('Error sincronizando con API, pero localStorage está actualizado:', apiErr);
+                }
             }
         } catch (err: any) {
             setError(err.message);
@@ -163,7 +150,9 @@ export function useAdmin() {
     const deleteProduct = async (id: string) => {
         if (!confirm('¿Estás seguro de eliminar este producto?')) return;
         try {
-            await apiService.deleteProduct(id);
+            if (isBackendId(id)) {
+                await apiService.deleteProduct(id);
+            }
             setProducts(prev => {
                 const updated = prev.filter(p => p.id !== id);
                 storageService.saveProducts(updated);
@@ -197,11 +186,13 @@ export function useAdmin() {
                 return newCombos;
             });
 
-            // Intentar sincronizar con API (pero no es crítico si falla)
-            try {
-                await apiService.updateCombo(updatedCombo);
-            } catch (apiErr) {
-                console.error('Error sincronizando con API, pero localStorage está actualizado:', apiErr);
+            // Sincronizar con API solo si el ID es numérico (existe en el backend)
+            if (isBackendId(updatedCombo.id)) {
+                try {
+                    await apiService.updateCombo(updatedCombo);
+                } catch (apiErr) {
+                    console.error('Error sincronizando con API, pero localStorage está actualizado:', apiErr);
+                }
             }
         } catch (err: any) {
             setError(err.message);
@@ -211,7 +202,9 @@ export function useAdmin() {
     const deleteCombo = async (id: string) => {
         if (!confirm('¿Estás seguro de eliminar este combo?')) return;
         try {
-            await apiService.deleteCombo(id);
+            if (isBackendId(id)) {
+                await apiService.deleteCombo(id);
+            }
             setCombos(prev => {
                 const updated = prev.filter(c => c.id !== id);
                 storageService.saveCombos(updated);

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Service } from '../../data/services';
 import { services as initialServices } from '../../data/services';
+import { apiService } from '../../services/api';
 import { storageService } from '../../services/storage';
 
 interface DynamicServicesByCategoryProps {
@@ -14,16 +15,25 @@ export default function DynamicServicesByCategory({ category, categoryLabel, gri
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// Cargar servicios desde localStorage o usar los iniciales
-		const loadedServices = storageService.getServices(initialServices);
-		const filtered = loadedServices.filter(s => s.category === category);
-		setServices(filtered);
-		setLoading(false);
+		const loadData = async () => {
+			try {
+				const fetched = await apiService.getServices();
+				const filtered = fetched.filter(s => s.category === category);
+				setServices(filtered);
+				storageService.saveServices(fetched);
+			} catch {
+				const cached = storageService.getServices(initialServices);
+				const filtered = cached.filter(s => s.category === category);
+				setServices(filtered);
+			} finally {
+				setLoading(false);
+			}
+		};
+		loadData();
 
-		// Escuchar cambios en tiempo real desde el admin
 		const handleStorageUpdate = () => {
-			const updatedServices = storageService.getServices(initialServices);
-			const filtered = updatedServices.filter(s => s.category === category);
+			const updated = storageService.getServices(initialServices);
+			const filtered = updated.filter(s => s.category === category);
 			setServices(filtered);
 		};
 
@@ -98,7 +108,7 @@ export default function DynamicServicesByCategory({ category, categoryLabel, gri
 									<div className="flex items-center justify-between gap-2">
 										<p className="text-lg sm:text-xl font-black text-brand-amber">{service.price}</p>
 										<a
-											href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20reservar%20una%20cita."
+											href={`https://wa.me/${import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000'}?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20reservar%20una%20cita.`}
 											target="_blank"
 											rel="noreferrer"
 											className="group/btn inline-flex items-center gap-1.5 rounded-full border-2 border-brand-amber/70 bg-brand-amber/10 px-4 py-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-amber transition-all duration-300 hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"
@@ -138,7 +148,7 @@ export default function DynamicServicesByCategory({ category, categoryLabel, gri
 								<div className="flex items-center justify-between gap-2">
 									<p className="text-lg sm:text-xl font-black text-brand-amber">{service.price}</p>
 									<a
-										href="https://wa.me/573000000000?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20reservar%20una%20cita."
+										href={`https://wa.me/${import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573000000000'}?text=Hola%20Upper%20Barber%20Cuts,%20quiero%20reservar%20una%20cita.`}
 										target="_blank"
 										rel="noreferrer"
 										className="group/btn inline-flex items-center gap-1.5 rounded-full border-2 border-brand-amber/70 bg-brand-amber/10 px-4 py-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-amber transition-all duration-300 hover:border-brand-amber hover:bg-brand-amber hover:text-brand-ink"

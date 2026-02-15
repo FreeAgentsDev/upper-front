@@ -1,6 +1,6 @@
 import type { Service } from '../data/services';
+import { services as localServices } from '../data/services';
 import type { Product, ProductCategory } from '../data/products';
-
 import { products as localProducts } from '../data/products';
 import type { CustomCombo } from '../data/combos';
 
@@ -46,16 +46,37 @@ const resolveImagePath = (imageUrl?: string, category?: string): string | undefi
     return `/media/tienda/${folder}/${cleanFileName}`;
 };
 
-const mapBackendService = (s: any): Service => ({
-    id: s.id.toString(),
-    name: s.name,
-    summary: s.description || '',
-    duration: s.duration || '',
-    price: `$${(s.price || 0).toLocaleString('es-CO')}`,
-    priceNumber: s.price || 0,
-    features: s.features ? (Array.isArray(s.features) ? s.features : JSON.parse(s.features)) : [],
-    category: s.category?.name?.toLowerCase().replace(/\s+/g, '-') || 'principal'
-});
+const mapBackendService = (s: any): Service => {
+    const backendCategory = s.category?.name || '';
+    let frontendCategory: string;
+
+    if (backendCategory === 'Tratamientos') {
+        frontendCategory = 'sin-cita';
+    } else if (s.name?.includes(' + ') || s.name?.toLowerCase().startsWith('combo')) {
+        frontendCategory = 'combo';
+    } else {
+        frontendCategory = 'principal';
+    }
+
+    // Enriquecer con datos locales (features, imágenes) cuando el backend no los tiene
+    const localMatch = localServices.find(ls => ls.name.toLowerCase() === s.name?.toLowerCase());
+
+    const features = s.features
+        ? (Array.isArray(s.features) ? s.features : JSON.parse(s.features))
+        : (localMatch?.features || []);
+
+    return {
+        id: s.id.toString(),
+        name: s.name,
+        summary: s.description || '',
+        duration: s.duration || '',
+        price: `$${(s.price || 0).toLocaleString('es-CO')}`,
+        priceNumber: s.price || 0,
+        features,
+        category: frontendCategory,
+        image: localMatch?.image
+    };
+};
 
 const mapBackendProduct = (p: any): Product => {
     const rawCategory = p.category?.name?.toLowerCase() || 'cuidado';

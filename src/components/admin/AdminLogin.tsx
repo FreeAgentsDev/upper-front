@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const ADMIN_PASSWORD = 'admin123'; // Contraseña de prueba
+const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD || 'admin123';
 
 export default function AdminLogin() {
 	const [password, setPassword] = useState('');
@@ -61,7 +61,7 @@ export default function AdminLogin() {
 
 			<div className="mt-6 rounded-xl border border-brand-amber/20 bg-brand-amber/5 p-4">
 				<p className="text-xs text-brand-light/60">
-					<strong className="text-brand-amber">Nota:</strong> Contraseña de prueba: <code className="rounded bg-brand-ink/50 px-2 py-1 text-brand-amber">admin123</code>
+					<strong className="text-brand-amber">Nota:</strong> Acceso restringido a administradores autorizados.
 				</p>
 			</div>
 		</div>

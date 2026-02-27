@@ -6,12 +6,43 @@ import type { CustomCombo } from '../data/combos';
 
 const API_BASE_URL = '/api';
 
+// --- Auth helpers ---
+const TOKEN_KEY = 'admin_token';
+
+export function getToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem(TOKEN_KEY);
+}
+
+export function setToken(token: string): void {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function clearToken(): void {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('admin_authenticated');
+}
+
+function authHeaders(): Record<string, string> {
+    const token = getToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 // Cache para categorías
 let serviceCategoriesCache: any[] = [];
 let productCategoriesCache: any[] = [];
 
 async function handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
+        if (response.status === 401) {
+            clearToken();
+            if (typeof window !== 'undefined') {
+                window.location.href = '/admin/login';
+            }
+            throw new Error('Sesión expirada. Inicia sesión nuevamente.');
+        }
         let errorMessage = `Error HTTP: ${response.status}`;
         try {
             const errorData = await response.json();
@@ -28,6 +59,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 // Mapeos de datos (Backend -> Frontend)
 const resolveImagePath = (imageUrl?: string, category?: string): string | undefined => {
     if (!imageUrl) return undefined;
+    if (imageUrl.startsWith('/uploads/')) return imageUrl;
     if (imageUrl.startsWith('http') || imageUrl.startsWith('/')) return imageUrl;
 
     // Mapeo detallado de categorías del backend a carpetas locales
@@ -65,6 +97,8 @@ const mapBackendService = (s: any): Service => {
         ? (Array.isArray(s.features) ? s.features : JSON.parse(s.features))
         : (localMatch?.features || []);
 
+    const uploadImage = s.image_url?.startsWith('/uploads/') ? s.image_url : undefined;
+
     return {
         id: s.id.toString(),
         name: s.name,
@@ -74,7 +108,7 @@ const mapBackendService = (s: any): Service => {
         priceNumber: s.price || 0,
         features,
         category: frontendCategory,
-        image: localMatch?.image
+        image: uploadImage || localMatch?.image
     };
 };
 
@@ -96,17 +130,31 @@ const mapBackendProduct = (p: any): Product => {
     const resolvedBackendImage = resolveImagePath(p.image_url, rawCategory);
 
 
+    // Prioridad: imagen de uploads > local match > resolved backend
+    const uploadImage = p.image_url?.startsWith('/uploads/') ? p.image_url : undefined;
+
     return {
         id: p.id.toString(),
         name: p.name,
         description: p.description || '',
         price: p.price || 0,
         category: categoryName as any,
-        image: localMatch?.image || resolvedBackendImage
+        image: uploadImage || localMatch?.image || resolvedBackendImage
     };
 };
 
 export const apiService = {
+    // Auth
+    async login(password: string): Promise<string> {
+        const data = await handleResponse<{ token: string }>(await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        }));
+        setToken(data.token);
+        return data.token;
+    },
+
     // Categories
     async getServiceCategories(): Promise<any[]> {
         if (serviceCategoriesCache.length > 0) return serviceCategoriesCache;
@@ -147,11 +195,12 @@ export const apiService = {
             duration: service.duration,
             price: service.priceNumber,
             category_id: category?.id || 1,
-            features: JSON.stringify(service.features || [])
+            features: JSON.stringify(service.features || []),
+            image_url: service.image
         };
         const data = await handleResponse<any>(await fetch(`${API_BASE_URL}/services`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify(body)
         }));
         return mapBackendService(data);
@@ -164,6 +213,7 @@ export const apiService = {
         if (service.duration) body.duration = service.duration;
         if (service.priceNumber) body.price = service.priceNumber;
         if (service.features) body.features = JSON.stringify(service.features);
+        if (service.image) body.image_url = service.image;
 
         if (service.category) {
             const categories = await this.getServiceCategories();
@@ -179,7 +229,7 @@ export const apiService = {
 
         const data = await handleResponse<any>(await fetch(`${API_BASE_URL}/services/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify(body)
         }));
         return mapBackendService(data);
@@ -187,7 +237,8 @@ export const apiService = {
 
     async deleteService(id: string): Promise<void> {
         await handleResponse(await fetch(`${API_BASE_URL}/services/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { ...authHeaders() }
         }));
     },
 
@@ -222,7 +273,7 @@ export const apiService = {
         };
         const data = await handleResponse<any>(await fetch(`${API_BASE_URL}/products`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify(body)
         }));
         return mapBackendProduct(data);
@@ -249,7 +300,7 @@ export const apiService = {
 
         const data = await handleResponse<any>(await fetch(`${API_BASE_URL}/products/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify(body)
         }));
         return mapBackendProduct(data);
@@ -257,7 +308,8 @@ export const apiService = {
 
     async deleteProduct(id: string): Promise<void> {
         await handleResponse(await fetch(`${API_BASE_URL}/products/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { ...authHeaders() }
         }));
     },
 
@@ -274,6 +326,7 @@ export const apiService = {
             services: c.items?.map((i: any) => i.service_name || `Servicio ${i.service_id}`) || [],
             price: c.total_price,
             description: c.description || '',
+            image: c.image_url?.startsWith('/uploads/') ? c.image_url : undefined,
             createdAt: new Date(c.created_at).getTime()
         }));
     },
@@ -330,12 +383,13 @@ export const apiService = {
             name: combo.name,
             description: combo.description,
             total_price: combo.price,
+            image_url: combo.image,
             items
         };
 
         const data = await handleResponse<any>(await fetch(`${API_BASE_URL}/combos`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify(body)
         }));
 
@@ -377,12 +431,13 @@ export const apiService = {
             name: combo.name,
             description: combo.description,
             total_price: combo.price,
+            image_url: combo.image,
             items
         };
 
         const data = await handleResponse<any>(await fetch(`${API_BASE_URL}/combos/${combo.id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders() },
             body: JSON.stringify(body)
         }));
 
@@ -398,8 +453,24 @@ export const apiService = {
 
     async deleteCombo(id: string): Promise<void> {
         await handleResponse(await fetch(`${API_BASE_URL}/combos/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { ...authHeaders() }
         }));
+    },
+
+    // Upload
+    async uploadImage(file: File, oldImageUrl?: string): Promise<string> {
+        const formData = new FormData();
+        formData.append('file', file);
+        if (oldImageUrl) {
+            formData.append('old_image_url', oldImageUrl);
+        }
+        const data = await handleResponse<{ url: string }>(await fetch(`${API_BASE_URL}/upload`, {
+            method: 'POST',
+            headers: { ...authHeaders() },
+            body: formData
+        }));
+        return data.url;
     },
 
     // Health

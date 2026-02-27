@@ -18,6 +18,10 @@ export default defineConfig({
           target: BACKEND_URL || 'https://upper-backend-production.up.railway.app',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '/api/v1')
+        },
+        '/uploads': {
+          target: BACKEND_URL || 'https://upper-backend-production.up.railway.app',
+          changeOrigin: true
         }
       }
     }

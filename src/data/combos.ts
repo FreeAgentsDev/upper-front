@@ -7,6 +7,7 @@ export interface CustomCombo {
   services: string[];
   price: number;
   description: string;
+  image?: string;
   createdAt: number;
 }
 

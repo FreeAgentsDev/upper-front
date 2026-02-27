@@ -1,27 +1,24 @@
 import { useState } from 'react';
-
-const ADMIN_PASSWORD = import.meta.env.PUBLIC_ADMIN_PASSWORD || 'admin123';
+import { apiService } from '../../services/api';
 
 export default function AdminLogin() {
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError('');
 		setIsLoading(true);
 
-		// Simular validación
-		setTimeout(() => {
-			if (password === ADMIN_PASSWORD) {
-				localStorage.setItem('admin_authenticated', 'true');
-				window.location.href = '/admin';
-			} else {
-				setError('Contraseña incorrecta');
-			}
+		try {
+			await apiService.login(password);
+			window.location.href = '/admin';
+		} catch (err: any) {
+			setError(err.message || 'Error al iniciar sesión');
+		} finally {
 			setIsLoading(false);
-		}, 300);
+		}
 	};
 
 	return (
@@ -67,4 +64,3 @@ export default function AdminLogin() {
 		</div>
 	);
 }
-

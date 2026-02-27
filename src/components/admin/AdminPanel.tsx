@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAdmin } from '../../hooks/useAdmin';
+import { getToken, clearToken } from '../../services/api';
 import AdminLayout from './layout/AdminLayout';
 import ServiceEditor from './editors/ServiceEditor';
 import ProductEditor from './editors/ProductEditor';
 import ComboEditor from './editors/ComboEditor';
 
 export default function AdminPanel() {
+	// 0. Auth check
+	const [authChecked, setAuthChecked] = useState(false);
+
+	useEffect(() => {
+		if (!getToken()) {
+			window.location.href = '/admin/login';
+			return;
+		}
+		setAuthChecked(true);
+	}, []);
+
 	// 1. Controller (Hook)
 	const {
 		services,
@@ -27,13 +39,13 @@ export default function AdminPanel() {
 	// 2. View State
 	const [activeTab, setActiveTab] = useState<'services' | 'products' | 'combos'>('services');
 
-	// 3. Logic to handle logout (simple for now)
+	// 3. Logic to handle logout
 	const handleLogout = () => {
-		localStorage.removeItem('admin_authenticated');
+		clearToken();
 		window.location.href = '/admin/login';
 	};
 
-	if (loading) {
+	if (!authChecked || loading) {
 		return <div className="flex h-screen items-center justify-center bg-brand-ink text-brand-amber animate-pulse font-bold tracking-widest uppercase">Cargando Panel...</div>;
 	}
 

@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import type { Product } from '../../../data/products';
+import { apiService } from '../../../services/api';
 
 
 interface ProductEditorProps {
@@ -11,6 +12,8 @@ interface ProductEditorProps {
 export default function ProductEditor({ products, onSave, onDelete }: ProductEditorProps) {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [pendingFile, setPendingFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -32,6 +35,7 @@ export default function ProductEditor({ products, onSave, onDelete }: ProductEdi
     const handleSelect = (product: Product) => {
         setSelectedId(product.id);
         setEditingProduct({ ...product });
+        setPendingFile(null);
         setShowMobileEditor(true);
     };
 
@@ -52,11 +56,38 @@ export default function ProductEditor({ products, onSave, onDelete }: ProductEdi
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file && editingProduct) {
+            setPendingFile(file);
+            // Preview local inmediato con Base64
             const reader = new FileReader();
             reader.onloadend = () => {
                 setEditingProduct({ ...editingProduct, image: reader.result as string });
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSave = async () => {
+        if (!editingProduct) return;
+        let productToSave = { ...editingProduct };
+
+        if (pendingFile) {
+            setUploading(true);
+            try {
+                const oldImageUrl = products.find(p => p.id === editingProduct.id)?.image;
+                const uploadedUrl = await apiService.uploadImage(pendingFile, oldImageUrl);
+                productToSave = { ...productToSave, image: uploadedUrl };
+                setPendingFile(null);
+            } catch (err) {
+                console.error('Error subiendo imagen:', err);
+                setUploading(false);
+                return;
+            }
+            setUploading(false);
+        }
+
+        onSave(productToSave);
+        if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+            setShowMobileEditor(false);
         }
     };
 
@@ -323,18 +354,26 @@ export default function ProductEditor({ products, onSave, onDelete }: ProductEdi
                         {/* Botón Guardar Flotante */}
                         <div className="pt-6 border-t border-brand-stone/20 flex justify-end sticky bottom-0 bg-brand-ink/0 backdrop-blur-sm pb-2">
                             <button
-                                onClick={() => {
-                                    onSave(editingProduct);
-                                    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-                                        setShowMobileEditor(false);
-                                    }
-                                }}
-                                className="w-full sm:w-auto bg-brand-amber text-brand-ink font-black uppercase tracking-widest py-3 sm:py-4 px-8 sm:px-10 rounded-xl shadow-[0_0_20px_rgba(247,148,31,0.4)] hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 text-xs sm:text-sm"
+                                onClick={handleSave}
+                                disabled={uploading}
+                                className="w-full sm:w-auto bg-brand-amber text-brand-ink font-black uppercase tracking-widest py-3 sm:py-4 px-8 sm:px-10 rounded-xl shadow-[0_0_20px_rgba(247,148,31,0.4)] hover:scale-105 active:scale-95 transition-transform flex items-center justify-center gap-2 text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                             >
-                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                                Guardar Producto
+                                {uploading ? (
+                                    <>
+                                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                        </svg>
+                                        Subiendo imagen...
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Guardar Producto
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>

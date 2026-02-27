@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { CustomCombo } from '../../../data/combos';
 import type { Service } from '../../../data/services';
+import { apiService } from '../../../services/api';
 
 interface ComboEditorProps {
     combos: CustomCombo[];
@@ -12,6 +13,9 @@ interface ComboEditorProps {
 export default function ComboEditor({ combos, services, onSave, onDelete }: ComboEditorProps) {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [editingCombo, setEditingCombo] = useState<CustomCombo | null>(null);
+    const [pendingFile, setPendingFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [showMobileEditor, setShowMobileEditor] = useState(false);
 
@@ -24,7 +28,49 @@ export default function ComboEditor({ combos, services, onSave, onDelete }: Comb
     const handleSelect = (combo: CustomCombo) => {
         setSelectedId(combo.id);
         setEditingCombo({ ...combo });
+        setPendingFile(null);
         setShowMobileEditor(true);
+    };
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && editingCombo) {
+            setPendingFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setEditingCombo({ ...editingCombo, image: reader.result as string });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSave = async () => {
+        if (!editingCombo) return;
+        if (editingCombo.services.length === 0) {
+            alert('Debes seleccionar al menos un servicio para crear un combo.');
+            return;
+        }
+        let comboToSave = { ...editingCombo };
+
+        if (pendingFile) {
+            setUploading(true);
+            try {
+                const oldImageUrl = combos.find(c => c.id === editingCombo.id)?.image;
+                const uploadedUrl = await apiService.uploadImage(pendingFile, oldImageUrl);
+                comboToSave = { ...comboToSave, image: uploadedUrl };
+                setPendingFile(null);
+            } catch (err) {
+                console.error('Error subiendo imagen:', err);
+                setUploading(false);
+                return;
+            }
+            setUploading(false);
+        }
+
+        onSave(comboToSave);
+        if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+            setShowMobileEditor(false);
+        }
     };
 
     const handleCreateNew = () => {
@@ -214,6 +260,33 @@ export default function ComboEditor({ combos, services, onSave, onDelete }: Comb
                                         className="w-full bg-brand-ink/80 border border-brand-stone/40 rounded-xl p-3 sm:p-4 text-sm text-brand-light focus:border-brand-amber outline-none resize-none"
                                     />
                                 </div>
+
+                                {/* Imagen del Combo */}
+                                <div>
+                                    <label className="block text-[10px] uppercase tracking-widest text-brand-light/60 mb-2 font-bold">Imagen del Combo</label>
+                                    <div
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className={`relative w-full aspect-video rounded-2xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all group overflow-hidden
+                                            ${editingCombo.image ? 'border-brand-amber/50 bg-brand-ink' : 'border-brand-stone/30 bg-brand-stone/5 hover:bg-brand-stone/10 hover:border-brand-amber'}`}
+                                    >
+                                        {editingCombo.image ? (
+                                            <>
+                                                <img src={editingCombo.image} alt="Preview" className="w-full h-full object-cover" onError={(e) => { e.currentTarget.src = '/media/image.png'; }} />
+                                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <span className="text-white font-bold uppercase tracking-widest text-[10px]">Cambiar Imagen</span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <div className="text-center p-6">
+                                                <svg className="h-10 w-10 mx-auto text-brand-stone mb-3 group-hover:text-brand-amber transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <p className="text-brand-light/60 text-xs font-medium uppercase tracking-wider">Subir foto</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
+                                </div>
                             </div>
 
                             {/* Columna Derecha: Selección de Servicios */}
@@ -254,28 +327,31 @@ export default function ComboEditor({ combos, services, onSave, onDelete }: Comb
                         {/* Botón Guardar Flotante */}
                         <div className="pt-6 border-t border-brand-stone/20 flex justify-end sticky bottom-0 bg-brand-ink/0 backdrop-blur-sm pb-2">
                             <button
-                                onClick={() => {
-                                    if (editingCombo.services.length === 0) {
-                                        alert('Debes seleccionar al menos un servicio para crear un combo.');
-                                        return;
-                                    }
-                                    onSave(editingCombo);
-                                    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-                                        setShowMobileEditor(false);
-                                    }
-                                }}
-                                disabled={editingCombo.services.length === 0}
+                                onClick={handleSave}
+                                disabled={editingCombo.services.length === 0 || uploading}
                                 className={`w-full sm:w-auto font-black uppercase tracking-widest py-3 sm:py-4 px-8 sm:px-10 rounded-xl transition-all flex items-center justify-center gap-2 text-xs sm:text-sm
-                                    ${editingCombo.services.length === 0
+                                    ${editingCombo.services.length === 0 || uploading
                                         ? 'bg-brand-stone/30 text-brand-light/20 cursor-not-allowed'
                                         : 'bg-brand-amber text-brand-ink shadow-[0_0_20px_rgba(247,148,31,0.4)] hover:scale-105 active:scale-95'
                                     }
                                 `}
                             >
-                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                                {editingCombo.services.length === 0 ? 'Selecciona Servicios' : 'Guardar Combo'}
+                                {uploading ? (
+                                    <>
+                                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                        </svg>
+                                        Subiendo imagen...
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        {editingCombo.services.length === 0 ? 'Selecciona Servicios' : 'Guardar Combo'}
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>

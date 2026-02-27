@@ -146,11 +146,16 @@ const mapBackendProduct = (p: any): Product => {
 export const apiService = {
     // Auth
     async login(password: string): Promise<string> {
-        const data = await handleResponse<{ token: string }>(await fetch(`${API_BASE_URL}/auth/login`, {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ password })
-        }));
+        });
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Contraseña incorrecta');
+        }
+        const data = await response.json();
         setToken(data.token);
         return data.token;
     },
